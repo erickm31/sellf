@@ -1,29 +1,31 @@
-import "../styles/login.css";
 import { useNavigate } from "react-router-dom";
+import styles from "./styles.module.css";
 
 export default function Login() {
   const navigate = useNavigate();
 
   return (
-    <div className="container">
+    <div className={styles.container}>
 
-      <div className="left">
+      <div className={styles.left}>
         <h2>Já tem uma conta?</h2>
 
         <input type="email" placeholder="Email" />
         <input type="password" placeholder="Senha" />
 
-        <p className="forgot">Esqueceu sua senha?</p>
+        <p className={styles.forgot}>Esqueceu sua senha?</p>
 
-        <button className="primary-btn">Entrar</button>
+        <button className={styles.primaryBtn}>
+          Entrar
+        </button>
       </div>
 
-      <div className="right">
-        <div className="right-content">
+      <div className={styles.right}>
+        <div className={styles.rightContent}>
           <h1>Bem-vindo!</h1>
 
           <button 
-            className="outline-btn"
+            className={styles.outlineBtn}
             onClick={() => navigate("/register")}
           >
             Criar uma conta →
