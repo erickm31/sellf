@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
+import Button from "../../components/ui/Button";
+import Input from "../../components/ui/input";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -10,26 +12,23 @@ export default function Login() {
       <div className={styles.left}>
         <h2>Já tem uma conta?</h2>
 
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Senha" />
+        <Input type="email" placeholder="Email" />
+        <Input type="password" placeholder="Senha" />
 
         <p className={styles.forgot}>Esqueceu sua senha?</p>
 
-        <button className={styles.primaryBtn}>
+        <Button variant="primary">
           Entrar
-        </button>
+        </Button>
       </div>
 
       <div className={styles.right}>
         <div className={styles.rightContent}>
           <h1>Bem-vindo!</h1>
 
-          <button 
-            className={styles.outlineBtn}
-            onClick={() => navigate("/register")}
-          >
+          <Button variant="outline" onClick={() => navigate("/register")}>
             Criar uma conta →
-          </button>
+          </Button>
         </div>
       </div>
 

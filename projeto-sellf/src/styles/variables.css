@@ -1,8 +1,8 @@
 :root {
-  --color-primary: #00509d;
-  --color-primary-dark: #11296b;
-  --color-background: #ffffff;
-  --color-gray: #ededed;
-  --color-accent: #ffcb05;
-  --color-accent-light: #ffdb57;
+  --cor-azul: #00509d;
+  --cor-azul-dark: #11296b;
+  --cor-fundo: #ffffff;
+  --cor-cinza: #ededed;
+  --cor-amarelo: #ffcb05;
+  --cor-amarelo-light: #ffdb57;
 }

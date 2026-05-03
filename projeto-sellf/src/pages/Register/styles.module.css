@@ -3,59 +3,63 @@
   height: 100vh;
 }
 
+/* LEFT */
 .left {
   flex: 1;
-  background-color: var(--color-primary);
+  background-color: var(--cor-azul);
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
+  text-align: center;
+  padding: 40px;
 }
 
+/* RIGHT */
 .right {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 40px;
-  gap: 15px;
+  padding: 60px;
+  gap: 20px;
+  background-color: #ffffff;
 }
 
-.input {
-  padding: 10px;
-  border: 1px solid var(--color-gray);
-  border-radius: 5px;
+.right h2 {
+  color: var(--cor-azul-dark);
 }
 
+/* FORM */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* GRID ROW */
 .row {
   display: flex;
   gap: 10px;
 }
 
-.registerBtn {
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  padding: 12px;
-  cursor: pointer;
-}
+/* RESPONSIVO */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
 
-.registerBtn:hover {
-  background-color: var(--color-accent);
-  color: black;
-}
+  .left {
+    display: none;
+  }
 
-.loginBtn {
-  background: transparent;
-  border: 2px solid white;
-  padding: 10px 15px;
-  color: white;
-  cursor: pointer;
-}
+  .right {
+    padding: 30px;
+  }
 
-.loginBtn:hover {
-  background-color: var(--color-accent-light);
-  color: black;
+  .row {
+    flex-direction: column;
+  }
 }

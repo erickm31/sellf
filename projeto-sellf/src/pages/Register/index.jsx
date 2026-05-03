@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
+import Button from "../../components/ui/Button";
+import Input from "../../components/ui/input";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -10,30 +12,29 @@ export default function Register() {
       <div className={styles.left}>
         <h1>Bem-vindo!</h1>
 
-        <button 
-          className={styles.loginBtn}
+        <Button variant="outline"
           onClick={() => navigate("/")}
         >
           Já tenho uma conta →
-        </button>
+        </Button>
       </div>
 
       <div className={styles.right}>
         <h2>Criar Conta</h2>
 
-        <input className={styles.input} type="text" placeholder="Nome" />
-        <input className={styles.input} type="text" placeholder="CPF" />
-        <input className={styles.input} type="email" placeholder="Email" />
-        <input className={styles.input} type="password" placeholder="Senha" />
+        <Input type="text" placeholder="Nome" />
+        <Input type="text" placeholder="CPF" />
+        <Input type="email" placeholder="Email" />
+        <Input type="password" placeholder="Senha" />
 
         <div className={styles.row}>
-          <input className={styles.input} type="text" placeholder="Cidade" />
-          <input className={styles.input} type="text" placeholder="Estado" />
+          <Input type="text" placeholder="Cidade" />
+          <Input type="text" placeholder="Estado" />
         </div>
 
-        <button className={styles.registerBtn}>
+        <Button className={styles.registerBtn}>
           Cadastrar-se
-        </button>
+        </Button>
       </div>
 
     </div>
