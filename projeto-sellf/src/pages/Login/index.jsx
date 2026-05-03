@@ -10,7 +10,7 @@ export default function Login() {
     <div className={styles.container}>
 
       <div className={styles.left}>
-        <h2>Já tem uma conta?</h2>
+        <h1>Já tem uma conta?</h1>
 
         <Input type="email" placeholder="Email" />
         <Input type="password" placeholder="Senha" />
@@ -27,7 +27,7 @@ export default function Login() {
           <h1>Bem-vindo!</h1>
 
           <Button variant="outline" onClick={() => navigate("/register")}>
-            Criar uma conta →
+            Criar uma conta <span class="material-symbols-outlined">arrow_forward</span>
           </Button>
         </div>
       </div>

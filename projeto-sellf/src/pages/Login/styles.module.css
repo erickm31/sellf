@@ -8,14 +8,16 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
   padding: 60px;
-  gap: 20px;
+  gap: 1rem;
   background-color: #ffffff;
 }
 
-.left h2 {
+.left h1 {
   color: var(--cor-azul-dark);
+  font-size: 4rem;
 }
 
 /* FORM */
@@ -31,10 +33,7 @@
   color: var(--cor-azul-dark);
   cursor: pointer;
   transition: 0.2s;
-}
-
-.forgot:hover {
-  color: var(--cor-amarelo);
+  text-decoration: underline;
 }
 
 /* RIGHT */
@@ -44,6 +43,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 2rem;
 }
 
 .rightContent {
@@ -51,7 +51,11 @@
   color: white;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rem;
 }
 
 /* RESPONSIVO */

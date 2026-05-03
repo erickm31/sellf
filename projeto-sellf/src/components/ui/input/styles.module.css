@@ -1,7 +1,15 @@
 .input {
+  width: 30rem;
   padding: 12px;
-  border: 1px solid var(--cor-cinza);
-  border-radius: 6px;
-  font-size: 14px;
-  width: 100%;
+  height: 2rem;
+  background-color: var(--cor-cinza);
+  border: none;
+  border-radius: 1rem;
+  font-size: 16px;
+  text-indent: 10px;
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--cor-azul);
 }
