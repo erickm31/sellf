@@ -4,6 +4,9 @@
   align-items: center;
   padding:1rem 5rem;
   background-color: transparent;
+  background-color: var(--cor-cinza);
+  margin: 1rem;
+  border-radius: 4rem;
 }
 
 .img {
