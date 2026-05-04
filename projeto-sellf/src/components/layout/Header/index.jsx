@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import Button from "../../ui/button";
-import sellfpng from "../../../assets/sellfpng.png";
+import sellfpng from "../../../assets/sellf.png";
 
 export default function Header() {
   const navigate = useNavigate();
