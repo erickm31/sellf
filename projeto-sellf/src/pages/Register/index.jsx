@@ -6,7 +6,7 @@ import Button from "../../components/ui/button";
 import Input from "../../components/ui/input";
 
 function validarCPF(cpf) {
-  const limpo = cpf.replace(/\D/g, ""); 
+  const limpo = cpf.replace(/\D/g, "");
   if (limpo.length !== 11) return false;
   if (/^(\d)\1+$/.test(limpo)) return false;
 
@@ -34,7 +34,8 @@ export default function Register() {
     email: "",
     senha: "",
     cidade: "",
-    estado: ""
+    estado: "",
+    idtipo_usuario: "" // ← novo
   });
 
   function handleChange(e) {
@@ -48,6 +49,11 @@ export default function Register() {
 
     if (!validarCPF(form.cpf)) {
       return setErro("CPF inválido. Verifique o número digitado.");
+    }
+
+    // Validação do tipo de usuário
+    if (!form.idtipo_usuario) {
+      return setErro("Selecione o tipo de conta.");
     }
 
     setLoading(true);
@@ -70,7 +76,7 @@ export default function Register() {
         <div className={styles.leftContent}>
           <h1>Bem-vindo!</h1>
           <Button variant="outline" onClick={() => navigate("/")}>
-            <span class="material-symbols-outlined">arrow_back</span> Já tenho uma conta
+            <span className="material-symbols-outlined">arrow_back</span> Já tenho uma conta
           </Button>
         </div>
       </div>
@@ -94,7 +100,19 @@ export default function Register() {
           <Input name="estado" type="text" placeholder="Estado" onChange={handleChange} />
         </div>
 
-        <Button variant="destaque"
+        <select
+          name="idtipo_usuario"
+          onChange={handleChange}
+          value={form.idtipo_usuario}
+          className={styles.select}
+        >
+          <option value="">Tipo de conta...</option>
+          <option value="1">Comprador</option>
+          <option value="2">Vendedor</option>
+        </select>
+
+        <Button
+          variant="destaque"
           className={styles.registerBtn}
           onClick={handleSubmit}
           disabled={loading}

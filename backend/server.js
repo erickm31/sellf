@@ -48,10 +48,15 @@ app.post("/usuarios", async (req, res) => {
   console.log("=== REQUISIÇÃO RECEBIDA ===")
   console.log("Body:", req.body)
 
-  const { nome, email, senha, cidade, estado, cpf } = req.body
+  const { nome, email, senha, cidade, estado, cpf, idtipo_usuario } = req.body
 
-  if (!nome || !email || !senha || !cidade || !estado || !cpf) {
+  if (!nome || !email || !senha || !cidade || !estado || !cpf || !idtipo_usuario) {
     return res.status(400).json({ error: "Todos os campos são obrigatórios." })
+  }
+
+  // Só permite comprador (1) ou vendedor (2) pelo cadastro
+  if (![1, 2].includes(Number(idtipo_usuario))) {
+    return res.status(400).json({ error: "Tipo de usuário inválido." })
   }
 
   if (!validarCPF(cpf)) {
@@ -61,10 +66,7 @@ app.post("/usuarios", async (req, res) => {
   try {
     const senhaHash = await bcrypt.hash(senha, 10)
 
-    const sqlLocal = `
-      INSERT INTO localizacao (cidade, estado, cep)
-      VALUES (?, ?, ?)
-    `
+    const sqlLocal = `INSERT INTO localizacao (cidade, estado, cep) VALUES (?, ?, ?)`
 
     db.query(sqlLocal, [cidade, estado, ""], (err, resultLocal) => {
       if (err) {
@@ -78,10 +80,11 @@ app.post("/usuarios", async (req, res) => {
       const sqlUser = `
         INSERT INTO usuario 
         (nome, cpf, email, senha, data_cadastro, idtipo_usuario, idstatus_usuario, id_localizacao)
-        VALUES (?, ?, ?, ?, NOW(), 1, 1, ?)
+        VALUES (?, ?, ?, ?, NOW(), ?, 1, ?)
       `
 
-      db.query(sqlUser, [nome, cpf, email, senhaHash, id_localizacao], (err, resultUser) => {
+      // ← idtipo_usuario dinâmico no lugar do 1 fixo
+      db.query(sqlUser, [nome, cpf, email, senhaHash, Number(idtipo_usuario), id_localizacao], (err, resultUser) => {
         if (err) {
           console.error("ERRO NO USUARIO:", err.message)
           return res.status(500).json({ error: err.message })
@@ -96,6 +99,45 @@ app.post("/usuarios", async (req, res) => {
     console.error("ERRO NO BCRYPT:", err.message)
     return res.status(500).json({ error: "Erro ao processar senha." })
   }
+})
+
+app.post("/login", async (req, res) => {
+  console.log("=== LOGIN RECEBIDO ===")
+  const { email, senha } = req.body
+
+  if (!email || !senha) {
+    return res.status(400).json({ error: "E-mail e senha são obrigatórios." })
+  }
+
+  const sql = "SELECT * FROM usuario WHERE email = ?"
+
+  db.query(sql, [email], async (err, results) => {
+    if (err) {
+      console.error("ERRO NO LOGIN:", err.message)
+      return res.status(500).json({ error: "Erro interno no servidor." })
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: "E-mail ou senha incorretos." })
+    }
+
+    const usuario = results[0]
+
+    const senhaCorreta = await bcrypt.compare(senha, usuario.senha)
+    if (!senhaCorreta) {
+      return res.status(401).json({ error: "E-mail ou senha incorretos." })
+    }
+
+    res.status(200).json({
+      message: "Login realizado com sucesso!",
+      usuario: {
+        id: usuario.id_usuario,
+        nome: usuario.nome,
+        email: usuario.email,
+        tipo: usuario.idtipo_usuario // ← retorna o tipo também
+      }
+    })
+  })
 })
 
 app.listen(3000, () => {

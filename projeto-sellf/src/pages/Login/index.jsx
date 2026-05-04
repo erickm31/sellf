@@ -33,7 +33,7 @@ export default function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      navigate("/home");
+      navigate("/landing");
     } catch (error) {
       const mensagem = error.response?.data?.error || "Erro ao fazer login.";
       setErro(mensagem);

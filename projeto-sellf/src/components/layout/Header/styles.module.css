@@ -21,3 +21,15 @@
   gap: 12px;
   align-items: center;
 }
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userName {
+  font-weight: 600;
+  color: white;
+  font-size: 14px;
+}
