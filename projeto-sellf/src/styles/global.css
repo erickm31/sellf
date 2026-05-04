@@ -14,3 +14,7 @@ body {
   background-color: var(--color-background);
   color: var(--color-primary-dark);
 }
+
+html {
+  scroll-behavior: smooth;
+}

@@ -54,7 +54,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 5rem;
+  padding: 2rem;
 }
 
 .left {
@@ -73,8 +73,8 @@
 }
 
 .card {
-  width: 30rem;
-  height: 12.5rem;
+  width: 27rem;
+  height: 11.5rem;
   background-color: white;
   border-radius: 2rem;
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
@@ -91,7 +91,7 @@
 }
 
 .cardTitle {
-  font-size: 7rem;
+  font-size: 6rem;
   color: var(--cor-azul-dark);
   margin: 0;
 }
@@ -107,10 +107,141 @@
 }
 
 .section3{
-  height: 100vh;
+  height: 120vh;
   background-color: var(--cor-fundo);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+
+.celular {
+  height: 50rem;
+  position: relative;
+  z-index: 2;
+}
+
+.leftbola::before {
+  content: "";
+  position: absolute;
+  width: 42rem;
+  height: 42rem;
+  background: linear-gradient(100deg, rgb(109, 109, 175) 0%, var(--cor-azul-dark) 100%);
+  border-radius: 50%;
+  
+  top: 10rem;   /* sobe */
+  right: 20rem; /* joga pro canto */
+
+  z-index: 1;
+}
+
+.leftbola {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
+}
+
+.rightbola{
+  padding: 5rem;
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+}
+
+.h1{
+  font-size: 3rem;
+  color: var(--cor-azul); /* remove o preenchimento */
+  margin-top: 1rem;
+  margin: 0; /* remove margin padrão */
+}
+
+.p{
+  color: rgb(0, 0, 0);
+  margin-bottom: 2rem;
+  margin-top: 1rem; /* controla exatamente o espaço */
+  font-size: 1.4rem;
+}
+
+.pessoas{
+  color: var(--cor-azul-dark);
+}
+
+.section4 {
+  min-height: 100vh;
+  background-color: var(--cor-fundo);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 2rem;
+}
+
+.faqContainer {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.faqTitle {
+  font-size: 3rem;
+  color: var(--cor-azul-dark);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.faqItem {
+  background-color: white;
+  border: 1px solid var(--cor-cinza);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: 0.3s;
+}
+
+.faqItem:hover {
+  border-color: var(--cor-amarelo);
+  transform: translateY(-3px);
+}
+
+.faqItem h3 {
+  margin: 0;
+  color: var(--cor-azul);
+  font-size: 1.2rem;
+}
+
+.faqItem p {
+  margin-top: 0.5rem;
+  color: #333;
+}
+
+.faqCTA {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.scrollTop {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--cor-azul);
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  transition: 0.3s;
+  z-index: 999;
+}
+
+.scrollTop:hover {
+  background-color: var(--cor-amarelo);
+  color: var(--cor-azul-dark);
+  transform: translateY(-5px);
 }
