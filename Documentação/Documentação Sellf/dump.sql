@@ -1,8 +1,10 @@
--- MySQL dump 10.13  Distrib 8.0.45, for Linux (x86_64)
+CREATE DATABASE  IF NOT EXISTS `bancodedadossellf` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `bancodedadossellf`;
+-- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
--- Host: localhost    Database: BancoDeDadosSELLF
+-- Host: 127.0.0.1    Database: bancodedadossellf
 -- ------------------------------------------------------
--- Server version	8.0.45-0ubuntu0.24.04.1
+-- Server version	9.7.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +16,14 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
+SET @@SESSION.SQL_LOG_BIN= 0;
+
+--
+-- GTID state at the beginning of the backup 
+--
+
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '07593505-4688-11f1-92e0-0ccc47eb1185:1-104';
 
 --
 -- Table structure for table `anuncio`
@@ -24,8 +34,8 @@ DROP TABLE IF EXISTS `anuncio`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `anuncio` (
   `id_anuncio` int NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(150) COLLATE armscii8_bin NOT NULL,
-  `descricao` text COLLATE armscii8_bin,
+  `titulo` varchar(150) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `descricao` text CHARACTER SET armscii8 COLLATE armscii8_bin,
   `id_produto` int DEFAULT NULL,
   `idstatus_anuncio` int NOT NULL,
   PRIMARY KEY (`id_anuncio`),
@@ -54,7 +64,7 @@ DROP TABLE IF EXISTS `categoria`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `categoria` (
   `id_categoria` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(100) COLLATE armscii8_bin NOT NULL,
+  `nome` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
   PRIMARY KEY (`id_categoria`)
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -69,31 +79,6 @@ LOCK TABLES `categoria` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `imagem_produto`
---
-
-DROP TABLE IF EXISTS `imagem_produto`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `imagem_produto` (
-  `id_imagem` int NOT NULL AUTO_INCREMENT,
-  `id_produto` int DEFAULT NULL,
-  PRIMARY KEY (`id_imagem`),
-  KEY `id_produto` (`id_produto`),
-  CONSTRAINT `imagem_produto_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`id_produto`)
-) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `imagem_produto`
---
-
-LOCK TABLES `imagem_produto` WRITE;
-/*!40000 ALTER TABLE `imagem_produto` DISABLE KEYS */;
-/*!40000 ALTER TABLE `imagem_produto` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `localizacao`
 --
 
@@ -102,11 +87,11 @@ DROP TABLE IF EXISTS `localizacao`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `localizacao` (
   `id_localizacao` int NOT NULL AUTO_INCREMENT,
-  `cidade` varchar(100) COLLATE armscii8_bin DEFAULT NULL,
-  `estado` varchar(50) COLLATE armscii8_bin DEFAULT NULL,
-  `cep` varchar(45) COLLATE armscii8_bin DEFAULT NULL,
+  `cidade` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `estado` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cep` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id_localizacao`)
-) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,6 +100,7 @@ CREATE TABLE `localizacao` (
 
 LOCK TABLES `localizacao` WRITE;
 /*!40000 ALTER TABLE `localizacao` DISABLE KEYS */;
+INSERT INTO `localizacao` VALUES (25,'Campo Mourão','Paraná',''),(29,'Campo Mourão','Paraná',''),(30,'Campo Mourão','Paraná','');
 /*!40000 ALTER TABLE `localizacao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +113,7 @@ DROP TABLE IF EXISTS `loja_anunciante`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `loja_anunciante` (
   `id_loja` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(100) COLLATE armscii8_bin NOT NULL,
+  `nome` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
   `id_usuario` int DEFAULT NULL,
   `id_localizacao` int DEFAULT NULL,
   `idstatus_loja` int NOT NULL,
@@ -159,10 +145,10 @@ DROP TABLE IF EXISTS `produto`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `produto` (
   `id_produto` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(100) COLLATE armscii8_bin NOT NULL,
-  `descricao` text COLLATE armscii8_bin,
-  `preco` varchar(20) COLLATE armscii8_bin NOT NULL,
-  `status` varchar(20) COLLATE armscii8_bin DEFAULT 'ativo',
+  `nome` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `descricao` text CHARACTER SET armscii8 COLLATE armscii8_bin,
+  `preco` varchar(20) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `status` varchar(20) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT 'ativo',
   `id_loja` int DEFAULT NULL,
   `id_categoria` int DEFAULT NULL,
   PRIMARY KEY (`id_produto`),
@@ -191,7 +177,7 @@ DROP TABLE IF EXISTS `status_anuncio`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `status_anuncio` (
   `idstatus_anuncio` int NOT NULL,
-  `status_anuncio` varchar(45) COLLATE armscii8_bin DEFAULT NULL,
+  `status_anuncio` varchar(45) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   PRIMARY KEY (`idstatus_anuncio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -214,7 +200,7 @@ DROP TABLE IF EXISTS `status_loja`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `status_loja` (
   `idstatus_loja` int NOT NULL,
-  `status_loja` varchar(45) COLLATE armscii8_bin DEFAULT NULL,
+  `status_loja` varchar(45) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   PRIMARY KEY (`idstatus_loja`)
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -237,7 +223,7 @@ DROP TABLE IF EXISTS `status_usuario`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `status_usuario` (
   `idstatus_usuario` int NOT NULL,
-  `status_usuario` varchar(45) COLLATE armscii8_bin DEFAULT NULL,
+  `status_usuario` varchar(45) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   PRIMARY KEY (`idstatus_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -248,6 +234,7 @@ CREATE TABLE `status_usuario` (
 
 LOCK TABLES `status_usuario` WRITE;
 /*!40000 ALTER TABLE `status_usuario` DISABLE KEYS */;
+INSERT INTO `status_usuario` VALUES (1,'ativo'),(2,'inativo');
 /*!40000 ALTER TABLE `status_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +247,7 @@ DROP TABLE IF EXISTS `tipo_usuario`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `tipo_usuario` (
   `idtipo_usuario` int NOT NULL,
-  `tipo_usuario` varchar(45) COLLATE armscii8_bin NOT NULL,
+  `tipo_usuario` varchar(45) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
   PRIMARY KEY (`idtipo_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -271,6 +258,7 @@ CREATE TABLE `tipo_usuario` (
 
 LOCK TABLES `tipo_usuario` WRITE;
 /*!40000 ALTER TABLE `tipo_usuario` DISABLE KEYS */;
+INSERT INTO `tipo_usuario` VALUES (1,'comprador'),(2,'vendedor'),(3,'administrador');
 /*!40000 ALTER TABLE `tipo_usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,9 +271,10 @@ DROP TABLE IF EXISTS `usuario`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
-  `email` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
-  `senha` varchar(255) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cpf` varchar(14) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `senha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `data_cadastro` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `idtipo_usuario` int NOT NULL,
   `idstatus_usuario` int NOT NULL,
@@ -298,7 +287,7 @@ CREATE TABLE `usuario` (
   CONSTRAINT `fk_usuario_localizacao1` FOREIGN KEY (`id_localizacao`) REFERENCES `localizacao` (`id_localizacao`),
   CONSTRAINT `fk_usuario_status_usuario1` FOREIGN KEY (`idstatus_usuario`) REFERENCES `status_usuario` (`idstatus_usuario`),
   CONSTRAINT `fk_usuario_tipo_usuario1` FOREIGN KEY (`idtipo_usuario`) REFERENCES `tipo_usuario` (`idtipo_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=ascii;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,8 +296,14 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (23,'João','097.518.929-88','joaopedrobuhler26@gmail.com','$2b$10$HyL04R84QCuhI4MKPiEVVO02rT5y2oLnIFF7vGfgwHZ/WEJsDfT9.','2026-05-04 00:28:04',3,1,25),(27,'João','097.518.929-88','xynhg01@gmail.com','$2b$10$H6AMo5idAAEru8VIEdDlF.Zjm9X0mIydCbIhyFFUDweNdM7.Nu0j6','2026-05-04 17:33:12',1,1,29),(28,'João Bühler','097.518.929-88','joao123@gmail.com','$2b$10$OXTy.H/thEB5FK6eyPxlLO/0Me5D//ZMafxjfvEejSFIbXhpMKOxC','2026-05-04 17:47:30',2,1,30);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'bancodedadossellf'
+--
+SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -319,4 +314,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-23  9:13:44
+-- Dump completed on 2026-05-04 15:28:45
