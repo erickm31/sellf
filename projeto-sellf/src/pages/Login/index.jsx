@@ -4,6 +4,7 @@ import axios from "axios";
 import styles from "./styles.module.css";
 import Button from "../../components/ui/button";
 import Input from "../../components/ui/input";
+import Header from "../../components/layout/Header";
 
 export default function Login() {
   const navigate = useNavigate();
