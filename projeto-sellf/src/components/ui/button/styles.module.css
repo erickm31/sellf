@@ -1,3 +1,4 @@
+
 .button {
   padding: 12px;
   border-radius: 2rem;
@@ -5,7 +6,7 @@
   border: none;
   font-weight: 500;
   height: 3rem;
-  min-width: 10rem;
+  min-width: 6rem;
   font-size: 1rem;
   font-weight: bold;
   display: flex;
@@ -23,13 +24,26 @@
   background: transparent;
   border: 4px solid white;
   color: white;
+    transition: transform 0.3s ease;
 }
 
 .outline:hover {
   border: 4px solid var(--cor-amarelo-light) ;
   color: rgb(255, 255, 255);
   transform: scale(1.05);
-  transition: 0.3s;
+}
+
+.outline2 {
+  background: transparent;
+  border: 4px solid var(--cor-azul);
+  color: var(--cor-azul);
+  transition: transform 0.3s ease;
+}
+
+.outline2:hover {
+  border: 4px solid var(--cor-azul);
+  color: var(--cor-azul);
+  transform: scale(1.05);
 }
 
 /* From Uiverse.io by adeladel522 */ 

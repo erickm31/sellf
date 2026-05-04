@@ -2,13 +2,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  background-color: var(--cor-azul);
+  padding:1rem 5rem;
+  background-color: transparent;
 }
 
 .img {
   width: 5rem;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.img:hover {
+  transform: scale(1.05);
 }
 
 .left {
@@ -22,14 +27,35 @@
   align-items: center;
 }
 
-.userInfo {
+.setinhas {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
+  margin-left: 5rem;
 }
 
-.userName {
-  font-weight: 600;
-  color: white;
-  font-size: 14px;
+.h2 {
+  font-size: 1.25rem;
+  color: var(--cor-azul-dark);
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
+
+/* muda cor */
+.h2:hover {
+  color: var(--cor-amarelo);
+}
+
+/* anima o ícone quando passa no texto inteiro */
+.h2:hover .span {
+  transform: translateY(0.2rem) rotate(90deg);
+}
+
+.span {
+  transition: transform 0.3s ease;
+} 
