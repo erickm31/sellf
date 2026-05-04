@@ -69,7 +69,7 @@ export default function Login() {
         <p className={styles.forgot}>Esqueceu sua senha?</p>
 
         <Button
-          variant="primary"
+          variant="destaque"
           onClick={handleSubmit}
           disabled={loading}
         >
@@ -81,7 +81,7 @@ export default function Login() {
         <div className={styles.rightContent}>
           <h1>Bem-vindo!</h1>
           <Button variant="outline" onClick={() => navigate("/register")}>
-            Criar uma conta →
+            Criar uma conta <span class="material-symbols-outlined">arrow_forward</span>
           </Button>
         </div>
       </div>

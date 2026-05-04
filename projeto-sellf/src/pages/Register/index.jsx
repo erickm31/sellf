@@ -67,10 +67,12 @@ export default function Register() {
     <div className={styles.container}>
 
       <div className={styles.left}>
-        <h1>Bem-vindo!</h1>
-        <Button variant="outline" onClick={() => navigate("/")}>
-          Já tenho uma conta →
-        </Button>
+        <div className={styles.leftContent}>
+          <h1>Bem-vindo!</h1>
+          <Button variant="outline" onClick={() => navigate("/")}>
+            <span class="material-symbols-outlined">arrow_back</span> Já tenho uma conta
+          </Button>
+        </div>
       </div>
 
       <div className={styles.right}>
@@ -92,7 +94,7 @@ export default function Register() {
           <Input name="estado" type="text" placeholder="Estado" onChange={handleChange} />
         </div>
 
-        <Button
+        <Button variant="destaque"
           className={styles.registerBtn}
           onClick={handleSubmit}
           disabled={loading}
