@@ -62,3 +62,9 @@
 .span {
   transition: transform 0.3s ease;
 } 
+
+.userName {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--cor-azul-dark);
+}

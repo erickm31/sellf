@@ -4,11 +4,17 @@ const express = require("express")
 const cors = require("cors")
 const mysql = require("mysql2")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+const cookieParser = require("cookie-parser")
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}))
 app.use(express.json())
+app.use(cookieParser())
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -44,6 +50,7 @@ function validarCPF(cpf) {
   return resto === parseInt(limpo[10])
 }
 
+// ─── CADASTRO ───────────────────────────────
 app.post("/usuarios", async (req, res) => {
   console.log("=== REQUISIÇÃO RECEBIDA ===")
   console.log("Body:", req.body)
@@ -54,7 +61,6 @@ app.post("/usuarios", async (req, res) => {
     return res.status(400).json({ error: "Todos os campos são obrigatórios." })
   }
 
-  // Só permite comprador (1) ou vendedor (2) pelo cadastro
   if (![1, 2].includes(Number(idtipo_usuario))) {
     return res.status(400).json({ error: "Tipo de usuário inválido." })
   }
@@ -71,7 +77,7 @@ app.post("/usuarios", async (req, res) => {
     db.query(sqlLocal, [cidade, estado, ""], (err, resultLocal) => {
       if (err) {
         console.error("ERRO NA LOCALIZACAO:", err.message)
-        return res.status(500).json({ error: err.message })
+        return res.status(500).json({ error: "Erro ao salvar localização." })
       }
 
       const id_localizacao = resultLocal.insertId
@@ -83,11 +89,10 @@ app.post("/usuarios", async (req, res) => {
         VALUES (?, ?, ?, ?, NOW(), ?, 1, ?)
       `
 
-      // ← idtipo_usuario dinâmico no lugar do 1 fixo
       db.query(sqlUser, [nome, cpf, email, senhaHash, Number(idtipo_usuario), id_localizacao], (err, resultUser) => {
         if (err) {
           console.error("ERRO NO USUARIO:", err.message)
-          return res.status(500).json({ error: err.message })
+          return res.status(500).json({ error: "Erro ao cadastrar usuário." })
         }
 
         console.log("Usuário criado, id:", resultUser.insertId)
@@ -101,6 +106,7 @@ app.post("/usuarios", async (req, res) => {
   }
 })
 
+// ─── LOGIN ───────────────────────────────────
 app.post("/login", async (req, res) => {
   console.log("=== LOGIN RECEBIDO ===")
   const { email, senha } = req.body
@@ -128,16 +134,57 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "E-mail ou senha incorretos." })
     }
 
+    const token = jwt.sign(
+      { id: usuario.id_usuario, nome: usuario.nome, email: usuario.email, tipo: usuario.idtipo_usuario },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    )
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
+    })
+
     res.status(200).json({
       message: "Login realizado com sucesso!",
       usuario: {
         id: usuario.id_usuario,
         nome: usuario.nome,
         email: usuario.email,
-        tipo: usuario.idtipo_usuario // ← retorna o tipo também
+        tipo: usuario.idtipo_usuario
       }
     })
   })
+})
+
+// ─── SESSÃO ──────────────────────────────────
+app.get("/sessao", (req, res) => {
+  const token = req.cookies.token
+
+  if (!token) {
+    return res.status(401).json({ error: "Não autenticado." })
+  }
+
+  try {
+    const dados = jwt.verify(token, process.env.JWT_SECRET)
+    res.status(200).json({
+      usuario: {
+        id: dados.id,
+        nome: dados.nome,
+        email: dados.email,
+        tipo: dados.tipo
+      }
+    })
+  } catch (err) {
+    return res.status(401).json({ error: "Sessão expirada." })
+  }
+})
+
+// ─── LOGOUT ──────────────────────────────────
+app.post("/logout", (req, res) => {
+  res.clearCookie("token")
+  res.status(200).json({ message: "Logout realizado com sucesso." })
 })
 
 app.listen(3000, () => {

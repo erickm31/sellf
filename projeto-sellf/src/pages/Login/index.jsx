@@ -27,10 +27,12 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const { data } = await axios.post("http://localhost:3000/login", form);
+      const { data } = await axios.post(
+        "http://localhost:3000/login",
+        form,
+        { withCredentials: true }
+      );
 
-      // Salva o token e dados do usuário
-      localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
       navigate("/landing");
@@ -82,7 +84,7 @@ export default function Login() {
         <div className={styles.rightContent}>
           <h1>Bem-vindo!</h1>
           <Button variant="outline" onClick={() => navigate("/register")}>
-            Criar uma conta <span class="material-symbols-outlined">arrow_forward</span>
+            Criar uma conta <span className="material-symbols-outlined">arrow_forward</span>
           </Button>
         </div>
       </div>
