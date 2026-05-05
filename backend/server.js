@@ -187,6 +187,68 @@ app.post("/logout", (req, res) => {
   res.status(200).json({ message: "Logout realizado com sucesso." })
 })
 
+// ─── MIDDLEWARE ADMIN ─────────────────────────
+function verificarAdmin(req, res, next) {
+  const token = req.cookies.token
+  if (!token) return res.status(401).json({ error: "Não autenticado." })
+
+  try {
+    const dados = jwt.verify(token, process.env.JWT_SECRET)
+    if (dados.tipo !== 3) return res.status(403).json({ error: "Acesso negado." })
+    req.usuario = dados
+    next()
+  } catch {
+    return res.status(401).json({ error: "Sessão expirada." })
+  }
+}
+
+// ─── READ — lista todos os usuários ──────────
+app.get("/admin/usuarios", verificarAdmin, (req, res) => {
+  const sql = `
+    SELECT u.id_usuario, u.nome, u.email, u.cpf, u.data_cadastro,
+           t.tipo_usuario, s.status_usuario
+    FROM usuario u
+    JOIN tipo_usuario t ON u.idtipo_usuario = t.idtipo_usuario
+    JOIN status_usuario s ON u.idstatus_usuario = s.idstatus_usuario
+    ORDER BY u.id_usuario ASC
+  `
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: "Erro ao buscar usuários." })
+    res.json(results)
+  })
+})
+
+// ─── UPDATE — edita um usuário ────────────────
+app.put("/admin/usuarios/:id", verificarAdmin, (req, res) => {
+  const { id } = req.params
+  const { nome, email, idtipo_usuario, idstatus_usuario } = req.body
+
+  if (!nome || !email || !idtipo_usuario || !idstatus_usuario) {
+    return res.status(400).json({ error: "Todos os campos são obrigatórios." })
+  }
+
+  const sql = `
+    UPDATE usuario 
+    SET nome = ?, email = ?, idtipo_usuario = ?, idstatus_usuario = ?
+    WHERE id_usuario = ?
+  `
+  db.query(sql, [nome, email, idtipo_usuario, idstatus_usuario, id], (err) => {
+    if (err) return res.status(500).json({ error: "Erro ao atualizar usuário." })
+    res.json({ message: "Usuário atualizado com sucesso!" })
+  })
+})
+
+// ─── DELETE — remove um usuário ───────────────
+app.delete("/admin/usuarios/:id", verificarAdmin, (req, res) => {
+  const { id } = req.params
+
+  const sql = "DELETE FROM usuario WHERE id_usuario = ?"
+  db.query(sql, [id], (err) => {
+    if (err) return res.status(500).json({ error: "Erro ao deletar usuário." })
+    res.json({ message: "Usuário deletado com sucesso!" })
+  })
+})
+
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000")
 })
