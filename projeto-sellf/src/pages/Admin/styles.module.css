@@ -1,0 +1,122 @@
+.container {
+  min-height: 100vh;
+  background-color: #f4f6fa;
+}
+
+.content {
+  padding: 2rem 4rem;
+}
+
+.titulo {
+  color: var(--cor-azul-dark);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.erro {
+  color: red;
+  margin-bottom: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.table th {
+  background-color: var(--cor-azul-dark);
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background-color: #f0f4ff;
+}
+
+.ativo {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.inativo {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.acoes {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btnEditar {
+  background-color: var(--cor-azul);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btnDeletar {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btnSalvar {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btnCancelar {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.inputEdit {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  width: 100%;
+}

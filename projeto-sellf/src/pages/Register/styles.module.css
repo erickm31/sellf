@@ -17,14 +17,23 @@
 .left {
   flex: 1;
   background-color: var(--cor-azul);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.leftContent{
+  text-align: center;
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 20px;
-  text-align: center;
-  font-size: 2rem;
+  justify-content: center;
+  margin-bottom: 10rem;
+  gap: 1rem;
 }
 
 .right {
@@ -59,7 +68,8 @@
   display: flex;
   gap: 10px;
   width: 100%;
-  max-width: 400px;
+  max-width: 26.5rem;
+  margin-bottom: 1rem;
 }
 
 .row > * {
@@ -71,3 +81,26 @@
   width: 100%;
 }
 
+.select {
+  width: 100%;
+  max-width: 30rem;
+  padding: 12px;
+  height: 3rem;
+  background-color: var(--cor-cinza);
+  border: none;
+  border-radius: 1rem;
+  font-size: 16px;
+  text-indent: 10px;
+  box-sizing: border-box;
+  color: #333;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23666' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--cor-azul);
+}

@@ -1,69 +1,251 @@
-require('dotenv').config() // ← Bug 3 resolvido: carrega o .env
+require('dotenv').config()
 
 const express = require("express")
 const cors = require("cors")
 const mysql = require("mysql2")
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+const cookieParser = require("cookie-parser")
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}))
 app.use(express.json())
+app.use(cookieParser())
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  charset: "utf8mb4"
 })
 
 db.connect(err => {
   if (err) {
-    console.error("Erro ao conectar no MySQL:", err)
+    console.error("Erro ao conectar no MySQL:", err.message)
   } else {
-    console.log("Conectado ao MySQL ✅")
+    console.log("Conectado ao MySQL com sucesso!")
   }
 })
 
-app.get("/", (req, res) => {
-  res.send("API rodando 🚀")
-})
+function validarCPF(cpf) {
+  const limpo = cpf.replace(/\D/g, "")
+  if (limpo.length !== 11) return false
+  if (/^(\d)\1+$/.test(limpo)) return false
 
-app.post("/usuarios", (req, res) => {
-  const { nome, email, senha, cidade, estado, cpf } = req.body
+  let soma = 0
+  for (let i = 0; i < 9; i++) soma += parseInt(limpo[i]) * (10 - i)
+  let resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  if (resto !== parseInt(limpo[9])) return false
 
-  
-  if (!nome || !email || !senha || !cidade || !estado || !cpf) {
+  soma = 0
+  for (let i = 0; i < 10; i++) soma += parseInt(limpo[i]) * (11 - i)
+  resto = (soma * 10) % 11
+  if (resto === 10 || resto === 11) resto = 0
+  return resto === parseInt(limpo[10])
+}
+
+// ─── CADASTRO ───────────────────────────────
+app.post("/usuarios", async (req, res) => {
+  console.log("=== REQUISIÇÃO RECEBIDA ===")
+  console.log("Body:", req.body)
+
+  const { nome, email, senha, cidade, estado, cpf, idtipo_usuario } = req.body
+
+  if (!nome || !email || !senha || !cidade || !estado || !cpf || !idtipo_usuario) {
     return res.status(400).json({ error: "Todos os campos são obrigatórios." })
   }
 
-  const sqlLocal = `
-    INSERT INTO localizacao (cidade, estado, cep)
-    VALUES (?, ?, ?)
-  `
+  if (![1, 2].includes(Number(idtipo_usuario))) {
+    return res.status(400).json({ error: "Tipo de usuário inválido." })
+  }
 
-  db.query(sqlLocal, [cidade, estado, ""], (err, resultLocal) => {
-    if (err) {
-      console.error("Erro ao inserir localização:", err)
-      // Segurança 2 corrigida: não expõe o erro SQL ao cliente
-      return res.status(500).json({ error: "Erro ao salvar localização." })
-    }
+  if (!validarCPF(cpf)) {
+    return res.status(400).json({ error: "CPF inválido." })
+  }
 
-    const id_localizacao = resultLocal.insertId
+  try {
+    const senhaHash = await bcrypt.hash(senha, 10)
 
-    const sqlUser = `
-      INSERT INTO usuario 
-      (nome, cpf, email, senha, data_cadastro, idtipo_usuario, idstatus_usuario, id_localizacao)
-      VALUES (?, ?, ?, ?, NOW(), 1, 1, ?)
-    `
+    const sqlLocal = `INSERT INTO localizacao (cidade, estado, cep) VALUES (?, ?, ?)`
 
-    db.query(sqlUser, [nome, cpf, email, senha, id_localizacao], (err, resultUser) => {
+    db.query(sqlLocal, [cidade, estado, ""], (err, resultLocal) => {
       if (err) {
-        console.error("Erro ao inserir usuário:", err)
-        return res.status(500).json({ error: "Erro ao cadastrar usuário." })
+        console.error("ERRO NA LOCALIZACAO:", err.message)
+        return res.status(500).json({ error: "Erro ao salvar localização." })
       }
 
-      res.status(201).json({ message: "Usuário cadastrado com sucesso!" })
+      const id_localizacao = resultLocal.insertId
+      console.log("Localização criada, id:", id_localizacao)
+
+      const sqlUser = `
+        INSERT INTO usuario 
+        (nome, cpf, email, senha, data_cadastro, idtipo_usuario, idstatus_usuario, id_localizacao)
+        VALUES (?, ?, ?, ?, NOW(), ?, 1, ?)
+      `
+
+      db.query(sqlUser, [nome, cpf, email, senhaHash, Number(idtipo_usuario), id_localizacao], (err, resultUser) => {
+        if (err) {
+          console.error("ERRO NO USUARIO:", err.message)
+          return res.status(500).json({ error: "Erro ao cadastrar usuário." })
+        }
+
+        console.log("Usuário criado, id:", resultUser.insertId)
+        res.status(201).json({ message: "Usuário cadastrado com sucesso!" })
+      })
     })
+
+  } catch (err) {
+    console.error("ERRO NO BCRYPT:", err.message)
+    return res.status(500).json({ error: "Erro ao processar senha." })
+  }
+})
+
+// ─── LOGIN ───────────────────────────────────
+app.post("/login", async (req, res) => {
+  console.log("=== LOGIN RECEBIDO ===")
+  const { email, senha } = req.body
+
+  if (!email || !senha) {
+    return res.status(400).json({ error: "E-mail e senha são obrigatórios." })
+  }
+
+  const sql = "SELECT * FROM usuario WHERE email = ?"
+
+  db.query(sql, [email], async (err, results) => {
+    if (err) {
+      console.error("ERRO NO LOGIN:", err.message)
+      return res.status(500).json({ error: "Erro interno no servidor." })
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: "E-mail ou senha incorretos." })
+    }
+
+    const usuario = results[0]
+
+    const senhaCorreta = await bcrypt.compare(senha, usuario.senha)
+    if (!senhaCorreta) {
+      return res.status(401).json({ error: "E-mail ou senha incorretos." })
+    }
+
+    const token = jwt.sign(
+      { id: usuario.id_usuario, nome: usuario.nome, email: usuario.email, tipo: usuario.idtipo_usuario },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    )
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
+    })
+
+    res.status(200).json({
+      message: "Login realizado com sucesso!",
+      usuario: {
+        id: usuario.id_usuario,
+        nome: usuario.nome,
+        email: usuario.email,
+        tipo: usuario.idtipo_usuario
+      }
+    })
+  })
+})
+
+// ─── SESSÃO ──────────────────────────────────
+app.get("/sessao", (req, res) => {
+  const token = req.cookies.token
+
+  if (!token) {
+    return res.status(401).json({ error: "Não autenticado." })
+  }
+
+  try {
+    const dados = jwt.verify(token, process.env.JWT_SECRET)
+    res.status(200).json({
+      usuario: {
+        id: dados.id,
+        nome: dados.nome,
+        email: dados.email,
+        tipo: dados.tipo
+      }
+    })
+  } catch (err) {
+    return res.status(401).json({ error: "Sessão expirada." })
+  }
+})
+
+// ─── LOGOUT ──────────────────────────────────
+app.post("/logout", (req, res) => {
+  res.clearCookie("token")
+  res.status(200).json({ message: "Logout realizado com sucesso." })
+})
+
+// ─── MIDDLEWARE ADMIN ─────────────────────────
+function verificarAdmin(req, res, next) {
+  const token = req.cookies.token
+  if (!token) return res.status(401).json({ error: "Não autenticado." })
+
+  try {
+    const dados = jwt.verify(token, process.env.JWT_SECRET)
+    if (dados.tipo !== 3) return res.status(403).json({ error: "Acesso negado." })
+    req.usuario = dados
+    next()
+  } catch {
+    return res.status(401).json({ error: "Sessão expirada." })
+  }
+}
+
+// ─── READ — lista todos os usuários ──────────
+app.get("/admin/usuarios", verificarAdmin, (req, res) => {
+  const sql = `
+    SELECT u.id_usuario, u.nome, u.email, u.cpf, u.data_cadastro,
+           t.tipo_usuario, s.status_usuario
+    FROM usuario u
+    JOIN tipo_usuario t ON u.idtipo_usuario = t.idtipo_usuario
+    JOIN status_usuario s ON u.idstatus_usuario = s.idstatus_usuario
+    ORDER BY u.id_usuario ASC
+  `
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: "Erro ao buscar usuários." })
+    res.json(results)
+  })
+})
+
+// ─── UPDATE — edita um usuário ────────────────
+app.put("/admin/usuarios/:id", verificarAdmin, (req, res) => {
+  const { id } = req.params
+  const { nome, email, idtipo_usuario, idstatus_usuario } = req.body
+
+  if (!nome || !email || !idtipo_usuario || !idstatus_usuario) {
+    return res.status(400).json({ error: "Todos os campos são obrigatórios." })
+  }
+
+  const sql = `
+    UPDATE usuario 
+    SET nome = ?, email = ?, idtipo_usuario = ?, idstatus_usuario = ?
+    WHERE id_usuario = ?
+  `
+  db.query(sql, [nome, email, idtipo_usuario, idstatus_usuario, id], (err) => {
+    if (err) return res.status(500).json({ error: "Erro ao atualizar usuário." })
+    res.json({ message: "Usuário atualizado com sucesso!" })
+  })
+})
+
+// ─── DELETE — remove um usuário ───────────────
+app.delete("/admin/usuarios/:id", verificarAdmin, (req, res) => {
+  const { id } = req.params
+
+  const sql = "DELETE FROM usuario WHERE id_usuario = ?"
+  db.query(sql, [id], (err) => {
+    if (err) return res.status(500).json({ error: "Erro ao deletar usuário." })
+    res.json({ message: "Usuário deletado com sucesso!" })
   })
 })
 

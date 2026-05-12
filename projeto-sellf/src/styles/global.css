@@ -2,9 +2,19 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   margin: 0;
   font-family: "Stack Sans Text", sans-serif;
   background-color: var(--color-background);
   color: var(--color-primary-dark);
+}
+
+html {
+  scroll-behavior: smooth;
 }
