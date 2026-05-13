@@ -54,6 +54,13 @@ export default function Header() {
         {usuario ? (
           <>
             <span className={styles.userName}>Olá, {usuario.nome}!</span>
+
+               {usuario.tipo === 3 && (
+              <Button variant="destaque" onClick={() => navigate("/admin")}>
+                Painel Admin
+              </Button>
+            )}
+            
             <Button variant="outline2" onClick={handleLogout}>
               Sair
             </Button>
