@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./styles.module.css";
-import Header from "../../components/layout/Header";
+import Headerlanding from "../../components/layout/Headerlanding";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ export default function Admin() {
 
   return (
     <div className={styles.container}>
-      <Header />
+      <Headerlanding />
 
       <div className={styles.content}>
         <h1 className={styles.titulo}>Gerenciamento de Usuários</h1>
