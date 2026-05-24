@@ -1,7 +1,8 @@
 import styles from "./styles.module.css";
 
 export default function Button({ children, onClick, variant = "primary", type = "button", disabled, className }) {
-  return (
+
+  return ( 
     <button
       type={type}
       onClick={onClick}

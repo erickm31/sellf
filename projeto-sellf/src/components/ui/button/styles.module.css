@@ -48,31 +48,42 @@
 }
 
 /* From Uiverse.io by adeladel522 */ 
-.destaque {
+.destaque,
+.destaqueamarelo {
   position: relative;
   transition: all 0.3s ease-in-out;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
   padding-block: 0.5rem;
   padding-inline: 1.25rem;
-  background-color: var(--cor-azul);
   border-radius: 2rem;
-  color: #ffff;
   gap: 10px;
   font-weight: bold;
   outline: none;
   overflow: hidden;
   font-size: 15px;
+  color: #fff;
 }
 
-.destaque:hover {
+.destaque {
+  background-color: var(--cor-azul);
+}
+
+.destaqueamarelo {
+  background-color: var(--cor-amarelo);
+}
+
+.destaque:hover,
+.destaqueamarelo:hover {
   transform: scale(1.05);
 }
 
-.destaque:hover::before {
+.destaque:hover::before,
+.destaqueamarelo:hover::before {
   animation: shine 1.5s ease-out infinite;
 }
 
-.destaque::before {
+.destaque::before,
+.destaqueamarelo::before {
   content: "";
   position: absolute;
   width: 100px;
