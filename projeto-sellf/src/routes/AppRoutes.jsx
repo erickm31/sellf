@@ -5,6 +5,7 @@ import Register from "../pages/Register";
 import Landing from "../pages/Landing";
 import Admin from "../pages/Admin";
 import Home from "../pages/Home";
+import CadastroProduto from "../pages/CadastroProduto";
 
 export default function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ export default function AppRoutes() {
       <Route path="/landing" element={<Landing />} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/cadastroProduto" element={<CadastroProduto />} />
     </Routes>
   );
 }
