@@ -1,0 +1,141 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 6rem;
+  background: white;
+  border-bottom: 1px solid var(--cor-cinza);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 7.25rem;
+  z-index: 90;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.locationInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.city {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cor-azul-dark);
+}
+
+.count {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.changeBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1.5px solid var(--cor-azul);
+  color: var(--cor-azul);
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.changeBtn:hover {
+  background: var(--cor-azul);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .bar {
+    padding: 0.65rem 1.25rem;
+    top: 6.5rem;
+  }
+
+  .count {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .changeBtn span {
+    display: none;
+  }
+}.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 6rem;
+  background: white;
+  border-bottom: 1px solid var(--cor-cinza);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 7.25rem;
+  z-index: 90;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.locationInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.city {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--cor-azul-dark);
+}
+
+.count {
+  font-size: 0.75rem;
+  color: #777;
+}
+
+.changeBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: 1.5px solid var(--cor-azul);
+  color: var(--cor-azul);
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.changeBtn:hover {
+  background: var(--cor-azul);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .bar {
+    padding: 0.65rem 1.25rem;
+    top: 6.5rem;
+  }
+
+  .count {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .changeBtn span {
+    display: none;
+  }
+}

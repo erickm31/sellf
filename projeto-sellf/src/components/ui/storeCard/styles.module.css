@@ -1,0 +1,93 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: white;
+  border: 1px solid var(--cor-cinza);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  border-color: var(--cor-azul);
+}
+
+.avatar {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--cor-azul-dark);
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cor-azul-dark);
+  margin: 0 0 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.2rem;
+}
+
+.stars {
+  font-size: 0.85rem;
+  color: var(--cor-amarelo);
+  letter-spacing: 1px;
+}
+
+.ratingValue {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--cor-azul-dark);
+}
+
+.listings {
+  font-size: 0.76rem;
+  color: #888;
+  margin: 0;
+}
+
+.visitBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: transparent;
+  border: 1.5px solid var(--cor-azul);
+  color: var(--cor-azul);
+  border-radius: 2rem;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.visitBtn:hover {
+  background: var(--cor-azul);
+  color: white;
+}

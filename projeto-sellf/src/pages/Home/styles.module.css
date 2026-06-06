@@ -1,0 +1,331 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  background: #f4f6f9;
+  min-height: 100vh;
+}
+
+/* ── Seções genéricas ── */
+.section {
+  padding: 2.5rem 6rem;
+  background: white;
+  margin-top: 0.5rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.4rem;
+  color: var(--cor-azul-dark);
+  margin: 0 0 0.2rem;
+  font-weight: 700;
+}
+
+.sectionSub {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0;
+}
+
+.seeAll {
+  background: transparent;
+  border: none;
+  color: var(--cor-azul);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+.seeAll:hover { text-decoration: underline; }
+
+/* ── Live pill ── */
+.livePill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 0.35rem 0.85rem;
+  border-radius: 2rem;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+.liveDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #16a34a;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ── Grids ── */
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 1.1rem;
+}
+
+.storesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1rem;
+}
+
+/* ── Destaque ── */
+.featuredSection { background: #fffbeb; }
+.sponsoredTag {
+  font-size: 0.72rem;
+  color: #92640a;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+/* ── Hero compacto ── */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 3rem 6rem;
+  background: var(--cor-azul-dark);
+  margin-top: 0.5rem;
+  min-height: 350px;
+  max-height: 450px;
+}
+
+.heroContent {
+  max-width: 34rem;
+  flex-shrink: 0;
+}
+
+.heroPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.9);
+  border-radius: 2rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-size: 2.2rem;
+  color: white;
+  margin: 0 0 0.85rem;
+  line-height: 1.2;
+}
+
+.heroSub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.78);
+  margin: 0 0 1.75rem;
+  line-height: 1.6;
+}
+
+.heroBtns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.heroVisual {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  max-width: 22rem;
+}
+
+.mapSvg {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 1rem;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25));
+}
+
+/* ── Benefícios ── */
+.benefitsSection {
+  background: var(--cor-azul-dark);
+}
+
+.sectionTitleWhite {
+  color: white;
+  margin-bottom: 1.75rem;
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 1.25rem;
+}
+
+.benefitCard {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.85rem;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  transition: background 0.2s;
+}
+.benefitCard:hover { background: rgba(255,255,255,0.1); }
+
+.benefitIcon {
+  width: 3.25rem;
+  height: 3.25rem;
+  background: rgba(255,203,5,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.85rem;
+}
+.benefitIcon span { color: var(--cor-amarelo) !important; }
+
+.benefitTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 0.4rem;
+}
+
+.benefitDesc {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.65);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── CTA Final ── */
+.ctaSection {
+  padding: 4rem 6rem;
+  background: white;
+  margin-top: 0.5rem;
+}
+
+.ctaInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.ctaText { flex: 1; }
+
+.ctaTitle {
+  font-size: 2rem;
+  color: var(--cor-azul-dark);
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+.ctaSub {
+  font-size: 1rem;
+  color: #555;
+  margin: 0 0 1.75rem;
+  line-height: 1.6;
+  max-width: 30rem;
+}
+
+.ctaBtns {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.ctaFree {
+  font-size: 0.85rem;
+  color: #15803d;
+  font-weight: 600;
+}
+
+.ctaStats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex-shrink: 0;
+}
+
+.ctaStat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.ctaStatNum {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cor-azul-dark);
+  line-height: 1;
+}
+
+.ctaStatLabel {
+  font-size: 0.78rem;
+  color: #888;
+}
+
+/* ── Responsividade ── */
+@media (max-width: 1100px) {
+  .section,
+  .hero,
+  .ctaSection,
+  .benefitsSection { padding-left: 2.5rem; padding-right: 2.5rem; }
+}
+
+@media (max-width: 768px) {
+  .section,
+  .ctaSection,
+  .benefitsSection { padding: 2rem 1.25rem; }
+
+  .hero {
+    flex-direction: column;
+    padding: 2rem 1.25rem;
+    min-height: unset;
+    max-height: unset;
+    text-align: center;
+  }
+  .heroTitle { font-size: 1.7rem; }
+  .heroBtns { justify-content: center; }
+  .heroVisual { display: none; }
+  .heroPill { margin: 0 auto 1rem; }
+
+  .productsGrid { grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); }
+  .storesGrid { grid-template-columns: 1fr; }
+  .benefitsGrid { grid-template-columns: 1fr 1fr; }
+
+  .ctaInner { flex-direction: column; gap: 2rem; }
+  .ctaStats { flex-direction: row; align-items: flex-start; }
+  .ctaStat { align-items: flex-start; }
+  .ctaTitle { font-size: 1.6rem; }
+}
+
+@media (max-width: 480px) {
+  .productsGrid { grid-template-columns: 1fr 1fr; }
+  .benefitsGrid { grid-template-columns: 1fr; }
+  .ctaStats { flex-wrap: wrap; gap: 0.75rem; }
+  .sectionHeader { flex-direction: column; gap: 0.5rem; }
+}
