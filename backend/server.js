@@ -6,6 +6,8 @@ const mysql = require("mysql2")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const cookieParser = require("cookie-parser")
+const multer = require("multer")
+const path = require("path")
 
 const app = express()
 
@@ -30,6 +32,28 @@ db.connect(err => {
   } else {
     console.log("Conectado ao MySQL com sucesso!")
   }
+})
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/")
+  },
+
+  filename: (req, file, cb) => {
+    const nome =
+      Date.now() +
+      "-" +
+      Math.round(Math.random() * 1e9)
+
+    cb(
+      null,
+      nome + path.extname(file.originalname)
+    )
+  }
+})
+
+const upload = multer({
+  storage
 })
 
 function validarCPF(cpf) {
@@ -160,7 +184,7 @@ app.post("/login", async (req, res) => {
 
 // ─── SESSÃO ──────────────────────────────────
 app.get("/sessao", (req, res) => {
-  const token = req.cookies.token
+  const token = req.cookies?.token
 
   if (!token) {
     return res.status(401).json({ error: "Não autenticado." })
@@ -168,7 +192,7 @@ app.get("/sessao", (req, res) => {
 
   try {
     const dados = jwt.verify(token, process.env.JWT_SECRET)
-    res.status(200).json({
+    return res.status(200).json({
       usuario: {
         id: dados.id,
         nome: dados.nome,
@@ -177,7 +201,7 @@ app.get("/sessao", (req, res) => {
       }
     })
   } catch (err) {
-    return res.status(401).json({ error: "Sessão expirada." })
+    return res.status(401).json({ error: "Sessão inválida ou expirada." })
   }
 })
 
@@ -186,6 +210,167 @@ app.post("/logout", (req, res) => {
   res.clearCookie("token")
   res.status(200).json({ message: "Logout realizado com sucesso." })
 })
+
+app.post("/lojas", verificarToken, (req, res) => {
+
+  const {
+    nome,
+    cidade,
+    estado,
+    cep,
+    bairro
+  } = req.body
+
+  const idUsuario = req.usuario.id
+
+  if (!nome || !cidade || !estado) {
+    return res.status(400).json({
+      error: "Preencha todos os campos obrigatórios."
+    })
+  }
+
+  db.query(
+    `
+    SELECT idtipo_usuario
+    FROM usuario
+    WHERE id_usuario = ?
+    `,
+    [idUsuario],
+    (err, usuarioResult) => {
+
+      if (err) {
+        console.error(err)
+        return res.status(500).json({
+          error: "Erro ao verificar usuário."
+        })
+      }
+
+      if (usuarioResult.length === 0) {
+        return res.status(404).json({
+          error: "Usuário não encontrado."
+        })
+      }
+
+      if (usuarioResult[0].idtipo_usuario !== 2) {
+        return res.status(403).json({
+          error: "Somente vendedores podem criar lojas."
+        })
+      }
+
+      db.query(
+        `
+        SELECT id_loja
+        FROM loja_anunciante
+        WHERE id_usuario = ?
+        `,
+        [idUsuario],
+        (err, lojaResult) => {
+
+          if (err) {
+            console.error(err)
+            return res.status(500).json({
+              error: "Erro ao verificar loja."
+            })
+          }
+
+          if (lojaResult.length > 0) {
+            return res.status(400).json({
+              error: "Você já possui uma loja."
+            })
+          }
+
+          db.query(
+            `
+            INSERT INTO localizacao
+            (
+              cidade,
+              estado,
+              cep,
+              bairro
+            )
+            VALUES (?, ?, ?, ?)
+            `,
+            [
+              cidade,
+              estado,
+              cep || "",
+              bairro || ""
+            ],
+            (err, localizacaoResult) => {
+
+              if (err) {
+                console.error(err)
+                return res.status(500).json({
+                  error: "Erro ao criar localização."
+                })
+              }
+
+              const idLocalizacao =
+                localizacaoResult.insertId
+
+              db.query(
+                `
+                INSERT INTO loja_anunciante
+                (
+                  nome,
+                  id_usuario,
+                  id_localizacao,
+                  idstatus_loja
+                )
+                VALUES (?, ?, ?, 1)
+                `,
+                [
+                  nome,
+                  idUsuario,
+                  idLocalizacao
+                ],
+                (err, lojaCriada) => {
+
+                  if (err) {
+                    console.error(err)
+                    return res.status(500).json({
+                      error: "Erro ao criar loja."
+                    })
+                  }
+
+                  return res.status(201).json({
+                    message: "Loja criada com sucesso!",
+                    id_loja: lojaCriada.insertId
+                  })
+                }
+              )
+            }
+          )
+        }
+      )
+    }
+  )
+})
+
+function verificarToken(req, res, next) {
+  const token = req.cookies.token
+
+  if (!token) {
+    return res.status(401).json({
+      error: "Não autenticado."
+    })
+  }
+
+  try {
+    const dados = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    )
+
+    req.usuario = dados
+
+    next()
+  } catch {
+    return res.status(401).json({
+      error: "Sessão expirada."
+    })
+  }
+}
 
 // ─── MIDDLEWARE ADMIN ─────────────────────────
 function verificarAdmin(req, res, next) {
@@ -248,6 +433,167 @@ app.delete("/admin/usuarios/:id", verificarAdmin, (req, res) => {
     res.json({ message: "Usuário deletado com sucesso!" })
   })
 })
+
+app.post(
+  "/produtos",
+  verificarToken,
+  upload.array("imagens", 8),
+  (req, res) => {
+
+    const {
+      titulo,
+      descricao,
+      preco,
+      id_categoria,
+      id_condicao
+    } = req.body
+
+    const idUsuario = req.usuario.id
+
+    if (
+      !titulo ||
+      !descricao ||
+      !preco ||
+      !id_categoria ||
+      !id_condicao
+    ) {
+      return res.status(400).json({
+        error: "Campos obrigatórios não preenchidos."
+      })
+    }
+
+    db.query(
+      `
+      SELECT id_loja
+      FROM loja_anunciante
+      WHERE id_usuario = ?
+      `,
+      [idUsuario],
+      (err, lojaResult) => {
+
+        if (err) {
+          console.error(err)
+          return res.status(500).json({
+            error: "Erro ao buscar loja."
+          })
+        }
+
+        if (lojaResult.length === 0) {
+          return res.status(400).json({
+            error: "Você precisa criar uma loja primeiro."
+          })
+        }
+
+        const idLoja = lojaResult[0].id_loja
+
+        db.query(
+          `
+          INSERT INTO produto
+          (
+            nome,
+            descricao,
+            preco,
+            status,
+            id_loja,
+            id_categoria,
+            id_condicao
+          )
+          VALUES (?, ?, ?, 'ativo', ?, ?, ?)
+          `,
+          [
+            titulo,
+            descricao,
+            preco,
+            idLoja,
+            id_categoria,
+            id_condicao
+          ],
+          (err, produtoResult) => {
+
+            if (err) {
+              console.error(err)
+              return res.status(500).json({
+                error: "Erro ao criar produto."
+              })
+            }
+
+            const idProduto = produtoResult.insertId
+
+            db.query(
+              `
+              INSERT INTO anuncio
+              (
+                titulo,
+                descricao,
+                id_produto,
+                idstatus_anuncio
+              )
+              VALUES (?, ?, ?, 1)
+              `,
+              [
+                titulo,
+                descricao,
+                idProduto
+              ],
+              (err) => {
+
+                if (err) {
+                  console.error(err)
+                  return res.status(500).json({
+                    error: "Erro ao criar anúncio."
+                  })
+                }
+
+                const imagens = req.files || []
+
+                if (imagens.length === 0) {
+                  return res.status(201).json({
+                    message: "Produto cadastrado com sucesso!"
+                  })
+                }
+
+                const valores = imagens.map(
+                  (img, index) => [
+                    idProduto,
+                    img.filename,
+                    index === 0 ? 1 : 0
+                  ]
+                )
+
+                db.query(
+                  `
+                  INSERT INTO imagem_produto
+                  (
+                    id_produto,
+                    caminho_imagem,
+                    imagem_principal
+                  )
+                  VALUES ?
+                  `,
+                  [valores],
+                  (err) => {
+
+                    if (err) {
+                      console.error(err)
+                      return res.status(500).json({
+                        error: "Erro ao salvar imagens."
+                      })
+                    }
+
+                    res.status(201).json({
+                      message:
+                        "Produto cadastrado com sucesso!"
+                    })
+                  }
+                )
+              }
+            )
+          }
+        )
+      }
+    )
+  }
+)
 
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000")

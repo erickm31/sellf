@@ -1,6 +1,52 @@
+import { useState } from "react";
+import axios from "axios";
 import styles from "./styles.module.css";
 
 export default function CadastroProduto() {
+
+  const [titulo, setTitulo] = useState("");
+const [descricao, setDescricao] = useState("");
+const [categoria, setCategoria] = useState("");
+const [condicao, setCondicao] = useState("");
+const [preco, setPreco] = useState("");
+const [cidade, setCidade] = useState("");
+const [estado, setEstado] = useState("");
+const [cep, setCep] = useState("");
+const [bairro, setBairro] = useState("");
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const resposta = await axios.post(
+      "http://localhost:3000/produtos",
+      {
+        titulo,
+        descricao,
+        preco,
+        id_categoria: categoria,
+        id_condicao: condicao,
+        cidade,
+        estado,
+        cep,
+        bairro
+      },
+      {
+        withCredentials: true
+      }
+    );
+
+    alert(resposta.data.message);
+
+  } catch (err) {
+    console.error(err);
+
+    alert(
+      err.response?.data?.error ||
+      "Erro ao cadastrar anúncio."
+    );
+  }
+};
   return (
     <div className={styles.page}>
       <button className={styles.voltarBtn}>
@@ -18,7 +64,11 @@ export default function CadastroProduto() {
         </div>
       </div>
 
-      <form className={styles.form} noValidate>
+      <form
+  className={styles.form}
+  noValidate
+  onSubmit={handleSubmit}
+>
         <div className={styles.twoCol}>
 
           {/* ── COLUNA ESQUERDA: Informações do produto ── */}
@@ -44,6 +94,8 @@ export default function CadastroProduto() {
                     type="text"
                     placeholder="Ex: iPhone 13 Pro 256GB — Azul Sierra"
                     maxLength={80}
+                    value={titulo}
+                    onChange={(e) => setTitulo(e.target.value)}
                   />
                   <span className={styles.hint}>Seja específico: marca, modelo, cor e capacidade</span>
                 </div>
@@ -59,6 +111,8 @@ export default function CadastroProduto() {
                     placeholder="Descreva o produto com detalhes: características, acessórios inclusos, motivo da venda..."
                     rows={4}
                     maxLength={2000}
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
                   />
                   <span className={styles.hint}>Quanto mais detalhes, maior a chance de vender</span>
                 </div>
@@ -68,21 +122,22 @@ export default function CadastroProduto() {
                     <label className={styles.label} htmlFor="categoria">
                       Categoria <span className={styles.required}>*</span>
                     </label>
-                    <select id="categoria" name="categoria" className={styles.select}>
+                    <select id="categoria" name="categoria" className={styles.select} value={categoria} onChange={(e) => setCategoria(e.target.value)}>
                       <option value="">Selecione uma categoria</option>
-                      <option>Eletrônicos</option>
-                      <option>Veículos</option>
-                      <option>Imóveis</option>
-                      <option>Moda e Vestuário</option>
-                      <option>Casa e Jardim</option>
-                      <option>Esportes e Lazer</option>
-                      <option>Brinquedos e Jogos</option>
-                      <option>Livros e Papelaria</option>
-                      <option>Música e Instrumentos</option>
-                      <option>Ferramentas e Construção</option>
-                      <option>Saúde e Beleza</option>
-                      <option>Animais de Estimação</option>
-                      <option>Outros</option>
+                       <option value="">Selecione</option>
+                          <option value="1">Eletrônicos</option>
+                          <option value="2">Veículos</option>
+                          <option value="3">Imóveis</option>
+                          <option value="4">Moda e Vestuário</option>
+                          <option value="5">Casa e Jardim</option>
+                          <option value="6">Esportes e Lazer</option>
+                          <option value="7">Brinquedos e Jogos</option>
+                          <option value="8">Livros e Papelaria</option>
+                          <option value="9">Música e Instrumentos</option>
+                          <option value="10">Ferramentas e Construção</option>
+                          <option value="11">Saúde e Beleza</option>
+                          <option value="12">Animais de Estimação</option>
+                          <option value="13">Outros</option>
                     </select>
                   </div>
 
@@ -90,12 +145,12 @@ export default function CadastroProduto() {
                     <label className={styles.label} htmlFor="condicao">
                       Condição <span className={styles.required}>*</span>
                     </label>
-                    <select id="condicao" name="condicao" className={styles.select}>
+                    <select id="condicao" name="condicao" className={styles.select} value={condicao} onChange={(e) => setCondicao(e.target.value)}>
                       <option value="">Selecione a condição</option>
-                      <option value="novo">Novo — na embalagem original</option>
-                      <option value="seminovo">Seminovo — usado poucas vezes</option>
-                      <option value="bom">Bom estado — marcas mínimas de uso</option>
-                      <option value="regular">Regular — funciona, com marcas visíveis</option>
+                      <option value="1">Novo — na embalagem original</option>
+                      <option value="2">Seminovo — usado poucas vezes</option>
+                      <option value="3">Bom estado — marcas mínimas de uso</option>
+                      <option value="4">Regular — funciona, com marcas visíveis</option>
                     </select>
                   </div>
                 </div>
@@ -123,6 +178,8 @@ export default function CadastroProduto() {
                       type="text"
                       inputMode="numeric"
                       placeholder="0,00"
+                      value={preco}
+                      onChange={(e) => setPreco(e.target.value)}
                     />
                   </div>
                 </div>
@@ -211,6 +268,8 @@ export default function CadastroProduto() {
                       className={styles.input}
                       type="text"
                       placeholder="Ex: Campo Mourão"
+                      value={cidade}
+                      onChange={(e) => setCidade(e.target.value)}
                     />
                   </div>
 
@@ -218,7 +277,7 @@ export default function CadastroProduto() {
                     <label className={styles.label} htmlFor="estado">
                       Estado <span className={styles.required}>*</span>
                     </label>
-                    <select id="estado" name="estado" className={styles.select}>
+                    <select id="estado" name="estado" className={styles.select} value={estado} onChange={(e) => setEstado(e.target.value)}>
                       <option value="">UF</option>
                       {["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"].map(uf => (
                         <option key={uf}>{uf}</option>
