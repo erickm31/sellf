@@ -182,6 +182,31 @@ app.post("/login", async (req, res) => {
   })
 })
 
+function verificarToken(req, res, next) {
+  const token = req.cookies.token
+
+  if (!token) {
+    return res.status(401).json({
+      error: "Não autenticado."
+    })
+  }
+
+  try {
+    const dados = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    )
+
+    req.usuario = dados
+
+    next()
+  } catch {
+    return res.status(401).json({
+      error: "Sessão expirada."
+    })
+  }
+}
+
 // ─── SESSÃO ──────────────────────────────────
 app.get("/sessao", (req, res) => {
   const token = req.cookies?.token
@@ -346,31 +371,6 @@ app.post("/lojas", verificarToken, (req, res) => {
     }
   )
 })
-
-function verificarToken(req, res, next) {
-  const token = req.cookies.token
-
-  if (!token) {
-    return res.status(401).json({
-      error: "Não autenticado."
-    })
-  }
-
-  try {
-    const dados = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    )
-
-    req.usuario = dados
-
-    next()
-  } catch {
-    return res.status(401).json({
-      error: "Sessão expirada."
-    })
-  }
-}
 
 // ─── MIDDLEWARE ADMIN ─────────────────────────
 function verificarAdmin(req, res, next) {

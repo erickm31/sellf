@@ -31,7 +31,7 @@ export default function Landing() {
             <p className={styles.p}>
               Explore produtos novos e usados na sua região. Conecte-se diretamente com vendedores locais e negocie com facilidade. Sem intermediários, apenas conexão.
             </p>
-            <div><Button variant="destaque" onClick={() => navigate("/register")}>
+            <div><Button variant="destaque" onClick={() => navigate("/login")}>
               Começar agora
             </Button></div>
           </div>
@@ -99,7 +99,7 @@ export default function Landing() {
             </div>
 
             <div className={styles.faqCTA}>
-              <Button variant="destaque" onClick={() => navigate("/register")}>
+              <Button variant="destaque" onClick={() => navigate("/login")}>
                 Começar agora
               </Button>
             </div>

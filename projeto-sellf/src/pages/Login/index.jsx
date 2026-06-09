@@ -35,7 +35,7 @@ export default function Login() {
 
       localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      navigate("/landing");
+      navigate("/home");
     } catch (error) {
       const mensagem = error.response?.data?.error || "Erro ao fazer login.";
       setErro(mensagem);
