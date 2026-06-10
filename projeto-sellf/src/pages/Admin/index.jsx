@@ -147,6 +147,7 @@ export default function Admin() {
                     <td className={styles.acoes}>
                       <button className={styles.btnEditar} onClick={() => abrirEdicao(u)}>Editar</button>
                       <button className={styles.btnDeletar} onClick={() => deletarUsuario(u.id_usuario)}>Deletar</button>
+                      <button className={styles.btnReset} onClick={() => resetarSenha(u.id_usuario, u.nome)}>Resetar senha</button>
                     </td>
                   </>
                 )}
