@@ -9,10 +9,26 @@
 .topBar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
   gap: 1rem;
   height: 4.5rem;
   padding: 0 1.5rem;
   background: var(--cor-azul-dark);
+}
+
+.leftTop {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.rightTop {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .logoArea { display: flex; align-items: center; flex-shrink: 0; }
