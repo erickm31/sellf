@@ -1,6 +1,6 @@
 .footer {
   text-align: center;
-  padding: 20px;
+  padding: 1.25rem;
   border-top: 1px solid #ededed;
   color: var(--cor-azul-dark);
 }

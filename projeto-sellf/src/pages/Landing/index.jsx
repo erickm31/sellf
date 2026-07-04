@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react"; // 👈 ADICIONE ISSO
+import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
 import Button from "../../components/ui/Button";
-import Header from "../../components/layout/Header";
+import Headerlanding from "../../components/layout/Headerlanding";
 import Footer from "../../components/layout/Footer";
 import sellfazul from "../../assets/sellf.png";
 import sellimg from "../../assets/imgSellfteste.png";
@@ -24,14 +24,14 @@ export default function Landing() {
 
   return (
     <div className={styles.container}>
-      <Header></Header>
+      <Headerlanding></Headerlanding>
         <section className={`${styles.section1}`}>
           <div className={styles.esquerda}>
             <h1 className={styles.title}>A vitrine digital da sua vizinhança! <span className={styles.subtitle}>Compre e Venda localmente com o Sellf</span></h1>
             <p className={styles.p}>
               Explore produtos novos e usados na sua região. Conecte-se diretamente com vendedores locais e negocie com facilidade. Sem intermediários, apenas conexão.
             </p>
-            <div><Button variant="destaque" onClick={() => navigate("/register")}>
+            <div><Button variant="destaque" onClick={() => navigate("/login")}>
               Começar agora
             </Button></div>
           </div>
@@ -99,7 +99,7 @@ export default function Landing() {
             </div>
 
             <div className={styles.faqCTA}>
-              <Button variant="destaque" onClick={() => navigate("/register")}>
+              <Button variant="destaque" onClick={() => navigate("/login")}>
                 Começar agora
               </Button>
             </div>

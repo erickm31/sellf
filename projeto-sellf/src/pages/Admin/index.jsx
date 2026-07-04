@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./styles.module.css";
-import Header from "../../components/layout/Header";
+import Headerlanding from "../../components/layout/Headerlanding";
 
 export default function Admin() {
   const navigate = useNavigate();
   const [usuarios, setUsuarios] = useState([]);
   const [erro, setErro] = useState("");
-  const [editando, setEditando] = useState(null); // usuário sendo editado
+  const [editando, setEditando] = useState(null);
   const [form, setForm] = useState({ nome: "", email: "", idtipo_usuario: "", idstatus_usuario: "" });
 
   useEffect(() => {
@@ -63,9 +63,24 @@ export default function Admin() {
     }
   }
 
+ async function resetarSenha(id, nome) {
+  if (!confirm(`Forçar troca de senha para "${nome}" no próximo login?`)) return;
+
+  try {
+    await axios.put(
+      `http://localhost:3000/admin/usuarios/${id}/resetar-senha`,
+      {},  // ← sem novaSenha
+      { withCredentials: true }
+    );
+    alert(`"${nome}" será solicitado a criar uma nova senha no próximo login.`);
+  } catch (err) {
+    setErro("Erro ao resetar senha.");
+  }
+}
+
   return (
     <div className={styles.container}>
-      <Header />
+      <Headerlanding />
 
       <div className={styles.content}>
         <h1 className={styles.titulo}>Gerenciamento de Usuários</h1>
@@ -88,40 +103,27 @@ export default function Admin() {
             {usuarios.map((u) => (
               <tr key={u.id_usuario}>
                 {editando === u.id_usuario ? (
-                  // Linha em modo edição
                   <>
                     <td>{u.id_usuario}</td>
                     <td>
-                      <input
-                        className={styles.inputEdit}
-                        value={form.nome}
-                        onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                      />
+                      <input className={styles.inputEdit} value={form.nome}
+                        onChange={(e) => setForm({ ...form, nome: e.target.value })} />
                     </td>
                     <td>
-                      <input
-                        className={styles.inputEdit}
-                        value={form.email}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      />
+                      <input className={styles.inputEdit} value={form.email}
+                        onChange={(e) => setForm({ ...form, email: e.target.value })} />
                     </td>
                     <td>
-                      <select
-                        className={styles.inputEdit}
-                        value={form.idtipo_usuario}
-                        onChange={(e) => setForm({ ...form, idtipo_usuario: Number(e.target.value) })}
-                      >
+                      <select className={styles.inputEdit} value={form.idtipo_usuario}
+                        onChange={(e) => setForm({ ...form, idtipo_usuario: Number(e.target.value) })}>
                         <option value={1}>Comprador</option>
                         <option value={2}>Vendedor</option>
                         <option value={3}>Administrador</option>
                       </select>
                     </td>
                     <td>
-                      <select
-                        className={styles.inputEdit}
-                        value={form.idstatus_usuario}
-                        onChange={(e) => setForm({ ...form, idstatus_usuario: Number(e.target.value) })}
-                      >
+                      <select className={styles.inputEdit} value={form.idstatus_usuario}
+                        onChange={(e) => setForm({ ...form, idstatus_usuario: Number(e.target.value) })}>
                         <option value={1}>Ativo</option>
                         <option value={2}>Inativo</option>
                       </select>
@@ -147,6 +149,7 @@ export default function Admin() {
                     <td className={styles.acoes}>
                       <button className={styles.btnEditar} onClick={() => abrirEdicao(u)}>Editar</button>
                       <button className={styles.btnDeletar} onClick={() => deletarUsuario(u.id_usuario)}>Deletar</button>
+                      <button className={styles.btnReset} onClick={() => resetarSenha(u.id_usuario, u.nome)}>Resetar senha</button>
                     </td>
                   </>
                 )}

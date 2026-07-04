@@ -1,75 +1,278 @@
-.container {
+.page {
   display: flex;
   height: 100vh;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease both;
 }
 
-/* LEFT */
-.left {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Formulário ── */
+.formPanel {
+  flex: 0 0 52%;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 3.5rem;
+  background: white;
+  overflow: hidden;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  color: var(--cor-azul);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  width: fit-content;
+  transition: gap 0.2s;
+}
+.backBtn:hover { gap: 0.6rem; }
+.backBtn span { font-size: 1rem; }
+
+.formBox {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 60px;
-  gap: 1rem;
-  background-color: #ffffff;
+  max-width: 24rem;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.left h1 {
+.title {
+  font-size: 1.9rem;
   color: var(--cor-azul-dark);
-  font-size: 4rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem;
 }
 
-/* FORM */
+.subtitle {
+  font-size: 0.88rem;
+  color: #999;
+  margin: 0 0 1.75rem;
+}
+
 .form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-}
-
-/* TEXT */
-.forgot {
-  font-size: 13px;
-  color: var(--cor-azul-dark);
-  cursor: pointer;
-  transition: 0.2s;
-  text-decoration: underline;
-}
-
-/* RIGHT */
-.right {
-  flex: 1;
-  background-color: var(--cor-azul);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-}
-
-.rightContent {
-  text-align: center;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10rem;
   gap: 1rem;
 }
 
-/* RESPONSIVO */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+.errorBox span { font-size: 0.95rem; }
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--cor-azul-dark);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.forgotLink {
+  background: transparent;
+  border: none;
+  color: var(--cor-azul);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.forgotLink:hover { text-decoration: underline; }
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.85rem;
+  font-size: 1rem;
+  color: #c8c8c8;
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  height: 2.75rem;
+  border: 1.5px solid #e2e6ea;
+  border-radius: 0.55rem;
+  padding: 0 2.75rem;
+  font-size: 0.92rem;
+  color: var(--cor-azul-dark);
+  background: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input::placeholder { color: #ccc; }
+.input:focus {
+  border-color: var(--cor-azul);
+  box-shadow: 0 0 0 3px rgba(0,80,157,0.1);
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.15s;
+}
+.eyeBtn:hover { color: var(--cor-azul); }
+.eyeBtn span { font-size: 1.1rem; }
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  height: 2.85rem;
+  background: var(--cor-azul-dark);
+  color: white;
+  border: none;
+  border-radius: 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.35rem;
+  transition: background 0.2s, transform 0.15s;
+}
+.submitBtn:hover:not(:disabled) {
+  background: var(--cor-azul);
+  transform: translateY(-1px);
+}
+.submitBtn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.switchText {
+  margin-top: 1.4rem;
+  text-align: center;
+  font-size: 0.86rem;
+  color: #999;
+}
+.switchLink {
+  background: transparent;
+  border: none;
+  color: var(--cor-azul);
+  font-weight: 700;
+  font-size: 0.86rem;
+  cursor: pointer;
+  padding: 0;
+}
+.switchLink:hover { text-decoration: underline; }
+
+/* ── Branding ── */
+.brandPanel {
+  flex: 0 0 48%;
+  background: var(--cor-azul-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.brandPanel::before {
+  content: "";
+  position: absolute;
+  width: 26rem;
+  height: 26rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  top: -8rem;
+  right: -8rem;
+}
+.brandPanel::after {
+  content: "";
+  position: absolute;
+  width: 16rem;
+  height: 16rem;
+  border-radius: 50%;
+  background: rgba(255,203,5,0.05);
+  bottom: -4rem;
+  left: -3rem;
+}
+
+.brandInner {
+  position: relative;
+  z-index: 1;
+  max-width: 20rem;
+}
+
+.brandTag {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--cor-amarelo);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 1rem;
+}
+
+.brandTitle {
+  font-size: 1.85rem;
+  color: white;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 0.85rem;
+}
+
+.brandDesc {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+  margin: 0;
+  margin-bottom: 1.75rem;
+}
+
+/* ── Responsividade ── */
 @media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-  }
-
-  .right {
-    display: none;
-  }
-
-  .left {
-    padding: 30px;
-  }
+  .brandPanel { display: none; }
+  .formPanel  { flex: 1; padding: 1.5rem; }
+  .formBox    { max-width: 100%; }
 }
