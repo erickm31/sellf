@@ -164,6 +164,12 @@ app.post("/login", async (req, res) => {
 
     const usuario = results[0]
 
+    if (usuario.idstatus_usuario == 2) {
+  return res.status(403).json({
+    error: "Esta conta está desativada."
+  });
+}
+
     // ← verifica o flag ANTES de checar a senha
     if (usuario.senha_resetada === 1) {
       const token = jwt.sign(
@@ -355,12 +361,18 @@ app.put("/admin/usuarios/:id", verificarAdmin, (req, res) => {
 })
 
 // ─── ADMIN — deletar usuário ──────────────────
-app.delete("/admin/usuarios/:id", verificarAdmin, (req, res) => {
+// ─── DESATIVAR usuário (em vez de deletar) ────
+app.put("/admin/usuarios/:id/desativar", verificarAdmin, (req, res) => {
   const { id } = req.params
-  db.query("DELETE FROM usuario WHERE id_usuario = ?", [id], (err) => {
-    if (err) return res.status(500).json({ error: "Erro ao deletar usuário." })
-    res.json({ message: "Usuário deletado com sucesso!" })
-  })
+
+  db.query(
+    "UPDATE usuario SET idstatus_usuario = 2 WHERE id_usuario = ?",
+    [id],
+    (err) => {
+      if (err) return res.status(500).json({ error: "Erro ao desativar usuário." })
+      res.json({ message: "Usuário desativado com sucesso!" })
+    }
+  )
 })
 
 // ─── ADMIN — resetar senha ────────────────────

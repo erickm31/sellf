@@ -72,22 +72,20 @@ export default function Admin() {
     }
   }
 
-  async function deletarUsuario(id) {
-    if (!confirm("Tem certeza que deseja deletar este usuário?")) return;
+  async function deletarUsuario(id, nome) {
+  if (!confirm(`Desativar a conta de "${nome}"?`)) return;
 
-    try {
-      await axios.delete(
-        `http://localhost:3000/admin/usuarios/${id}`,
-        {
-          withCredentials: true,
-        }
-      );
-
-      buscarUsuarios();
-    } catch {
-      setErro("Erro ao deletar usuário.");
-    }
+  try {
+    await axios.put(
+      `http://localhost:3000/admin/usuarios/${id}/desativar`,
+      {},
+      { withCredentials: true }
+    );
+    buscarUsuarios();
+  } catch {
+    setErro("Erro ao desativar usuário.");
   }
+}
 
   async function resetarSenha(id, nome) {
     if (
@@ -265,12 +263,12 @@ export default function Admin() {
                         Editar
                       </button>
 
-                      <button
-                        className={styles.btnDeletar}
-                        onClick={() => deletarUsuario(u.id_usuario)}
-                      >
-                        Deletar
-                      </button>
+                     <button
+  className={styles.btnDeletar}
+  onClick={() => deletarUsuario(u.id_usuario, u.nome)}
+>
+  Desativar
+</button>
 
                       <button
                         className={styles.btnReset}
