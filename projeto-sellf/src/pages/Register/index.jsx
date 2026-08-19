@@ -20,6 +20,11 @@ function validarCPF(cpf) {
   return resto === parseInt(limpo[10]);
 }
 
+function validarTelefone(telefone) {
+  const limpo = telefone.replace(/\D/g, "");
+  return limpo.length === 10 || limpo.length === 11;
+}
+
 export default function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -28,7 +33,7 @@ export default function Register() {
   const [showPass, setShowPass] = useState(false);
 
   const [form, setForm] = useState({
-    nome: "", cpf: "", email: "", senha: "",
+    nome: "", cpf: "", email: "", telefone: "", senha: "",
     cidade: "", estado: "", idtipo_usuario: "",
   });
 
@@ -46,17 +51,20 @@ export default function Register() {
     e.preventDefault();
     setErro("");
 
-    if (!form.nome?.trim())            return setErro("Informe seu nome.");
-    if (!validarCPF(form.cpf ?? ""))  return setErro("CPF inválido.");
-    if (!form.email?.includes("@"))   return setErro("E-mail inválido.");
-    if ((form.senha?.length ?? 0) < 6) return setErro("Senha mínima: 6 caracteres.");
-    if (!form.cidade?.trim())          return setErro("Informe sua cidade.");
-    if (!form.estado?.trim())          return setErro("Informe seu estado.");
-    if (!form.idtipo_usuario)          return setErro("Selecione o tipo de conta.");
+    if (!form.nome?.trim())              return setErro("Informe seu nome.");
+    if (!validarCPF(form.cpf ?? ""))     return setErro("CPF inválido.");
+    if (!form.email?.includes("@"))      return setErro("E-mail inválido.");
+    if (!validarTelefone(form.telefone ?? "")) return setErro("Telefone inválido. Use DDD + número.");
+    if ((form.senha?.length ?? 0) < 6)   return setErro("Senha mínima: 6 caracteres.");
+    if (!form.cidade?.trim())            return setErro("Informe sua cidade.");
+    if (!form.estado?.trim())            return setErro("Informe seu estado.");
+    if (!form.idtipo_usuario)            return setErro("Selecione o tipo de conta.");
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:3000/usuarios", form);
+      // envia só números no telefone (o back deve esperar formato tipo "44999998888")
+      const payload = { ...form, telefone: form.telefone.replace(/\D/g, "") };
+      await axios.post("http://localhost:3000/usuarios", payload);
       setSuccess(true);
       setTimeout(() => navigate("/login"), 2200);
     } catch (error) {
@@ -102,7 +110,7 @@ export default function Register() {
               </li>
             ))}
           </ul>
-          <Button onClick={() => navigate("/")} variant="destaqueamarelo">Já tenho uma Conta</Button>
+          <Button onClick={() => navigate("/login")} variant="destaqueamarelo">Já tenho uma Conta</Button>
         </div>
       </div>
 
@@ -171,6 +179,15 @@ export default function Register() {
 
               <div className={styles.fieldGroup}>
                 <div className={styles.inputWrap}>
+                  <span className={`material-symbols-outlined ${styles.inputIcon}`}>call</span>
+                  <input name="telefone" type="tel" placeholder="WhatsApp (DDD + número)"
+                    autoComplete="tel" className={styles.input}
+                    onChange={handleChange} value={form.telefone} />
+                </div>
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <div className={styles.inputWrap}>
                   <span className={`material-symbols-outlined ${styles.inputIcon}`}>location_on</span>
                   <input name="cidade" type="text" placeholder="Cidade"
                     autoComplete="address-level2" className={styles.input}
@@ -213,7 +230,7 @@ export default function Register() {
 
           <p className={styles.switchText}>
             Já tem conta?{" "}
-            <button className={styles.switchLink} onClick={() => navigate("/")}>
+            <button className={styles.switchLink} onClick={() => navigate("/login")}>
               Fazer login
             </button>
           </p>

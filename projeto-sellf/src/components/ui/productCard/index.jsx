@@ -1,6 +1,8 @@
 import styles from "./styles.module.css";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCard({
+  id,
   image,
   title,
   price,
@@ -11,8 +13,15 @@ export default function ProductCard({
   distance = null,
   isFavorited = false,
 }) {
+  const navigate = useNavigate();
+
   return (
-    <div className={styles.card}>
+    <div
+      className={styles.card}
+      onClick={() => navigate(`/product/${id}`)}
+      role="button"
+      tabIndex={0}
+    >
       {/* Badges superiores */}
       <div className={styles.topBadges}>
         {sponsored && <span className={`${styles.badge} ${styles.badgeSponsored}`}>Patrocinado</span>}
@@ -25,6 +34,7 @@ export default function ProductCard({
         <button
           className={`${styles.fav} ${isFavorited ? styles.favActive : ""}`}
           aria-label="Favoritar"
+          onClick={(e) => e.stopPropagation()}
         >
           <span className="material-symbols-outlined">favorite</span>
         </button>

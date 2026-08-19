@@ -5,48 +5,50 @@ import styles from "./styles.module.css";
 export default function CadastroProduto() {
 
   const [titulo, setTitulo] = useState("");
-const [descricao, setDescricao] = useState("");
-const [categoria, setCategoria] = useState("");
-const [condicao, setCondicao] = useState("");
-const [preco, setPreco] = useState("");
-const [cidade, setCidade] = useState("");
-const [estado, setEstado] = useState("");
-const [cep, setCep] = useState("");
-const [bairro, setBairro] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [condicao, setCondicao] = useState("");
+  const [preco, setPreco] = useState("");
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  // TODO: reativar quando o back suportar upload de imagem e localização por produto
+  // const [cidade, setCidade] = useState("");
+  // const [estado, setEstado] = useState("");
+  // const [cep, setCep] = useState("");
+  // const [bairro, setBairro] = useState("");
 
-  try {
-    const resposta = await axios.post(
-      "http://localhost:3000/produtos",
-      {
-        titulo,
-        descricao,
-        preco,
-        id_categoria: categoria,
-        id_condicao: condicao,
-        cidade,
-        estado,
-        cep,
-        bairro
-      },
-      {
-        withCredentials: true
-      }
-    );
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    alert(resposta.data.message);
+    try {
+      const resposta = await axios.post(
+        "http://localhost:3000/produtos",
+        {
+          titulo,
+          descricao,
+          preco,
+          id_categoria: categoria,
+          id_condicao: condicao,
+          // cidade,
+          // estado,
+          // cep,
+          // bairro
+        },
+        {
+          withCredentials: true
+        }
+      );
 
-  } catch (err) {
-    console.error(err);
+      alert(resposta.data.message);
 
-    alert(
-      err.response?.data?.error ||
-      "Erro ao cadastrar anúncio."
-    );
-  }
-};
+    } catch (err) {
+      console.error(err);
+
+      alert(
+        err.response?.data?.error ||
+        "Erro ao cadastrar anúncio."
+      );
+    }
+  };
   return (
     <div className={styles.page}>
       <button className={styles.voltarBtn}>
@@ -65,10 +67,10 @@ const handleSubmit = async (e) => {
       </div>
 
       <form
-  className={styles.form}
-  noValidate
-  onSubmit={handleSubmit}
->
+        className={styles.form}
+        noValidate
+        onSubmit={handleSubmit}
+      >
         <div className={styles.twoCol}>
 
           {/* ── COLUNA ESQUERDA: Informações do produto ── */}
@@ -124,20 +126,19 @@ const handleSubmit = async (e) => {
                     </label>
                     <select id="categoria" name="categoria" className={styles.select} value={categoria} onChange={(e) => setCategoria(e.target.value)}>
                       <option value="">Selecione uma categoria</option>
-                       <option value="">Selecione</option>
-                          <option value="1">Eletrônicos</option>
-                          <option value="2">Veículos</option>
-                          <option value="3">Imóveis</option>
-                          <option value="4">Moda e Vestuário</option>
-                          <option value="5">Casa e Jardim</option>
-                          <option value="6">Esportes e Lazer</option>
-                          <option value="7">Brinquedos e Jogos</option>
-                          <option value="8">Livros e Papelaria</option>
-                          <option value="9">Música e Instrumentos</option>
-                          <option value="10">Ferramentas e Construção</option>
-                          <option value="11">Saúde e Beleza</option>
-                          <option value="12">Animais de Estimação</option>
-                          <option value="13">Outros</option>
+                      <option value="1">Eletrônicos</option>
+                      <option value="2">Veículos</option>
+                      <option value="3">Imóveis</option>
+                      <option value="4">Moda e Vestuário</option>
+                      <option value="5">Casa e Jardim</option>
+                      <option value="6">Esportes e Lazer</option>
+                      <option value="7">Brinquedos e Jogos</option>
+                      <option value="8">Livros e Papelaria</option>
+                      <option value="9">Música e Instrumentos</option>
+                      <option value="10">Ferramentas e Construção</option>
+                      <option value="11">Saúde e Beleza</option>
+                      <option value="12">Animais de Estimação</option>
+                      <option value="13">Outros</option>
                     </select>
                   </div>
 
@@ -191,11 +192,11 @@ const handleSubmit = async (e) => {
             </section>
           </div>
 
-          {/* ── COLUNA DIREITA: Fotos + Localização ── */}
+          {/* ── COLUNA DIREITA ── */}
           <div className={styles.colRight}>
             <p className={styles.colLabel}>Mídia e localização</p>
 
-            {/* Card: Fotos */}
+            {/* TODO: reativar quando o back suportar upload de imagem
             <section className={styles.card}>
               <div className={styles.cardHead}>
                 <span className="material-symbols-outlined">add_photo_alternate</span>
@@ -247,8 +248,9 @@ const handleSubmit = async (e) => {
                 </div>
               </div>
             </section>
+            */}
 
-            {/* Card: Localização */}
+            {/* TODO: reativar quando produto tiver localização própria (hoje vem da loja/usuário)
             <section className={styles.card}>
               <div className={styles.cardHead}>
                 <span className="material-symbols-outlined">location_on</span>
@@ -308,6 +310,16 @@ const handleSubmit = async (e) => {
                     placeholder="Ex: Centro"
                   />
                 </div>
+              </div>
+            </section>
+            */}
+
+            {/* Placeholder visual pra coluna não ficar vazia até reativarmos acima */}
+            <section className={styles.card}>
+              <div className={styles.cardBody}>
+                <p className={styles.sectionDesc}>
+                  Fotos e localização por produto serão adicionadas em breve. Por enquanto, a localização usada é a do seu cadastro.
+                </p>
               </div>
             </section>
           </div>

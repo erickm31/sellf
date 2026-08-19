@@ -67,7 +67,7 @@ export default function Headerlanding() {
           </>
         ) : (
           <>
-            <Button variant="outline2" onClick={() => navigate("/")}>
+            <Button variant="outline2" onClick={() => navigate("/login")}>
               Entrar
             </Button>
             <Button variant="destaque" onClick={() => navigate("/register")}>
