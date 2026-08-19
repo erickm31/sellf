@@ -95,9 +95,27 @@ app.post("/usuarios", async (req, res) => {
   console.log("=== REQUISIÇÃO RECEBIDA ===")
   console.log("Body:", req.body)
 
-  const { nome, email, senha, cidade, estado, cpf, idtipo_usuario } = req.body
+  const {
+  nome,
+  email,
+  senha,
+  telefone,
+  cidade,
+  estado,
+  cpf,
+  idtipo_usuario
+} = req.body
 
-  if (!nome || !email || !senha || !cidade || !estado || !cpf || !idtipo_usuario) {
+  if (
+  !nome ||
+  !email ||
+  !senha ||
+  !telefone ||
+  !cidade ||
+  !estado ||
+  !cpf ||
+  !idtipo_usuario
+) {
     return res.status(400).json({ error: "Todos os campos são obrigatórios." })
   }
   if (![1, 2].includes(Number(idtipo_usuario))) {
@@ -122,19 +140,48 @@ app.post("/usuarios", async (req, res) => {
         const id_localizacao = resultLocal.insertId
 
         db.query(
-          `INSERT INTO usuario 
-            (nome, cpf, email, senha, data_cadastro, idtipo_usuario, idstatus_usuario, id_localizacao)
-           VALUES (?, ?, ?, ?, NOW(), ?, 1, ?)`,
-          [nome, cpf, email, senhaHash, Number(idtipo_usuario), id_localizacao],
-          (err, resultUser) => {
-            if (err) {
-              console.error("ERRO NO USUARIO:", err.message)
-              return res.status(500).json({ error: "Erro ao cadastrar usuário." })
-            }
-            console.log("Usuário criado, id:", resultUser.insertId)
-            res.status(201).json({ message: "Usuário cadastrado com sucesso!" })
-          }
-        )
+  `INSERT INTO usuario
+    (
+      nome,
+      cpf,
+      telefone,
+      email,
+      senha,
+      data_cadastro,
+      idtipo_usuario,
+      idstatus_usuario,
+      id_localizacao
+    )
+   VALUES (?, ?, ?, ?, ?, NOW(), ?, 1, ?)`,
+  [
+    nome,
+    cpf,
+    telefone,
+    email,
+    senhaHash,
+    Number(idtipo_usuario),
+    id_localizacao
+  ],
+  (err, resultUser) => {
+
+    if (err) {
+      console.error("ERRO NO USUARIO:", err.message)
+
+      return res.status(500).json({
+        error: "Erro ao cadastrar usuário."
+      })
+    }
+
+    console.log(
+      "Usuário criado, id:",
+      resultUser.insertId
+    )
+
+    res.status(201).json({
+      message: "Usuário cadastrado com sucesso!"
+    })
+  }
+)
       }
     )
   } catch (err) {
@@ -390,62 +437,227 @@ app.put("/admin/usuarios/:id/resetar-senha", verificarAdmin, (req, res) => {
 })
 
 // ─── PRODUTOS ────────────────────────────────
-app.post("/produtos", verificarToken, upload.array("imagens", 8), (req, res) => {
-  const { titulo, descricao, preco, id_categoria, id_condicao } = req.body
+// ─── PRODUTOS ────────────────────────────────
+app.post("/produtos", verificarToken, (req, res) => {
+
+  const {
+    titulo,
+    descricao,
+    preco,
+    id_categoria,
+    id_condicao
+  } = req.body
+
   const idUsuario = req.usuario.id
 
-  if (!titulo || !descricao || !preco || !id_categoria || !id_condicao) {
-    return res.status(400).json({ error: "Campos obrigatórios não preenchidos." })
+  // Validação
+  if (
+    !titulo ||
+    !descricao ||
+    !preco ||
+    !id_categoria ||
+    !id_condicao
+  ) {
+    return res.status(400).json({
+      error: "Campos obrigatórios não preenchidos."
+    })
   }
 
-  db.query(
-    `SELECT id_loja FROM loja_anunciante WHERE id_usuario = ?`,
-    [idUsuario],
-    (err, lojaResult) => {
-      if (err) return res.status(500).json({ error: "Erro ao buscar loja." })
-      if (lojaResult.length === 0) return res.status(400).json({ error: "Você precisa criar uma loja primeiro." })
+  // ─────────────────────────────────────────
+  // VERIFICA SE O USUÁRIO JÁ POSSUI UMA LOJA
+  // ─────────────────────────────────────────
 
-      const idLoja = lojaResult[0].id_loja
+  db.query(
+    `
+    SELECT id_loja
+    FROM loja_anunciante
+    WHERE id_usuario = ?
+    `,
+    [idUsuario],
+
+    (err, lojaResult) => {
+
+      if (err) {
+        console.error("ERRO AO BUSCAR LOJA:", err)
+        return res.status(500).json({
+          error: "Erro ao buscar loja."
+        })
+      }
+
+      // ─────────────────────────────────────
+      // SE JÁ POSSUI LOJA
+      // ─────────────────────────────────────
+
+      if (lojaResult.length > 0) {
+
+        const idLoja = lojaResult[0].id_loja
+
+        return criarProduto(idLoja)
+      }
+
+      // ─────────────────────────────────────
+      // SE NÃO POSSUI LOJA → CRIA AUTOMATICAMENTE
+      // ─────────────────────────────────────
 
       db.query(
-        `INSERT INTO produto (nome, descricao, preco, status, id_loja, id_categoria, id_condicao)
-         VALUES (?, ?, ?, 'ativo', ?, ?, ?)`,
-        [titulo, descricao, preco, idLoja, id_categoria, id_condicao],
-        (err, produtoResult) => {
-          if (err) return res.status(500).json({ error: "Erro ao criar produto." })
+        `
+        SELECT nome, id_localizacao
+        FROM usuario
+        WHERE id_usuario = ?
+        `,
+        [idUsuario],
 
-          const idProduto = produtoResult.insertId
+        (err, usuarioResult) => {
 
+          if (err) {
+            console.error("ERRO AO BUSCAR USUÁRIO:", err)
+            return res.status(500).json({
+              error: "Erro ao buscar dados do usuário."
+            })
+          }
+
+          if (usuarioResult.length === 0) {
+            return res.status(404).json({
+              error: "Usuário não encontrado."
+            })
+          }
+
+          const nomeUsuario = usuarioResult[0].nome
+          const idLocalizacao = usuarioResult[0].id_localizacao
+
+          // Cria a loja automaticamente
           db.query(
-            `INSERT INTO anuncio (titulo, descricao, id_produto, idstatus_anuncio) VALUES (?, ?, ?, 1)`,
-            [titulo, descricao, idProduto],
-            (err) => {
-              if (err) return res.status(500).json({ error: "Erro ao criar anúncio." })
+            `
+            INSERT INTO loja_anunciante
+            (
+              nome,
+              id_usuario,
+              id_localizacao,
+              idstatus_loja
+            )
+            VALUES (?, ?, ?, 1)
+            `,
+            [
+              `Loja de ${nomeUsuario}`,
+              idUsuario,
+              idLocalizacao
+            ],
 
-              const imagens = req.files || []
+            (err, novaLoja) => {
 
-              if (imagens.length === 0) {
-                return res.status(201).json({ message: "Produto cadastrado com sucesso!" })
+              if (err) {
+                console.error("ERRO AO CRIAR LOJA AUTOMÁTICA:", err)
+                return res.status(500).json({
+                  error: "Erro ao criar loja automaticamente."
+                })
               }
 
-              const valores = imagens.map((img, index) => [idProduto, img.filename, index === 0 ? 1 : 0])
-
-              db.query(
-                `INSERT INTO imagem_produto (id_produto, caminho_imagem, imagem_principal) VALUES ?`,
-                [valores],
-                (err) => {
-                  if (err) return res.status(500).json({ error: "Erro ao salvar imagens." })
-                  res.status(201).json({ message: "Produto cadastrado com sucesso!" })
-                }
+              console.log(
+                "Loja criada automaticamente. ID:",
+                novaLoja.insertId
               )
+
+              criarProduto(novaLoja.insertId)
             }
           )
         }
       )
     }
   )
-})
 
+
+  // ─────────────────────────────────────────
+  // FUNÇÃO PARA CRIAR O PRODUTO
+  // ─────────────────────────────────────────
+
+  function criarProduto(idLoja) {
+
+    db.query(
+      `
+      INSERT INTO produto
+      (
+        nome,
+        descricao,
+        preco,
+        status,
+        id_loja,
+        id_categoria,
+        id_condicao
+      )
+      VALUES (?, ?, ?, 'ativo', ?, ?, ?)
+      `,
+      [
+        titulo,
+        descricao,
+        preco,
+        idLoja,
+        id_categoria,
+        id_condicao
+      ],
+
+      (err, produtoResult) => {
+
+        if (err) {
+          console.error("ERRO AO CRIAR PRODUTO:", err)
+
+          return res.status(500).json({
+            error: "Erro ao criar produto."
+          })
+        }
+
+        const idProduto = produtoResult.insertId
+
+        console.log(
+          "Produto criado. ID:",
+          idProduto
+        )
+
+        // ───────────────────────────────────
+        // CRIA O ANÚNCIO
+        // ───────────────────────────────────
+
+        db.query(
+          `
+          INSERT INTO anuncio
+          (
+            titulo,
+            descricao,
+            id_produto,
+            idstatus_anuncio
+          )
+          VALUES (?, ?, ?, 1)
+          `,
+          [
+            titulo,
+            descricao,
+            idProduto
+          ],
+
+          (err, anuncioResult) => {
+
+            if (err) {
+              console.error("ERRO AO CRIAR ANÚNCIO:", err)
+
+              return res.status(500).json({
+                error: "Erro ao criar anúncio."
+              })
+            }
+
+            console.log(
+              "Anúncio criado. ID:",
+              anuncioResult.insertId
+            )
+
+            return res.status(201).json({
+              message: "Produto cadastrado com sucesso!",
+              id_produto: idProduto
+            })
+          }
+        )
+      }
+    )
+  }
+})
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000")
 })
