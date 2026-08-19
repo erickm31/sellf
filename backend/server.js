@@ -17,6 +17,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(cookieParser())
+app.use("/uploads", express.static("uploads"))
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -438,7 +439,10 @@ app.put("/admin/usuarios/:id/resetar-senha", verificarAdmin, (req, res) => {
 
 // ─── PRODUTOS ────────────────────────────────
 // ─── PRODUTOS ────────────────────────────────
-app.post("/produtos", verificarToken, (req, res) => {
+app.post("/produtos", verificarToken, upload.array("imagens", 8), (req, res) => {
+
+  console.log("FILES:", req.files)
+  console.log("BODY:", req.body)
 
   const {
     titulo,
@@ -648,15 +652,100 @@ app.post("/produtos", verificarToken, (req, res) => {
               anuncioResult.insertId
             )
 
-            return res.status(201).json({
-              message: "Produto cadastrado com sucesso!",
-              id_produto: idProduto
-            })
+            // Após criar o anúncio, substitui o return res.status(201) por:
+            console.log("CHEGOU NO BLOCO DE IMAGENS")
+const imagens = req.files || []
+console.log("IMAGENS LENGTH:", imagens.length)
+
+if (imagens.length === 0) {
+  return res.status(201).json({ message: "Produto cadastrado com sucesso!", id_produto: idProduto })
+}
+
+const valores = imagens.map((img, index) => [idProduto, img.filename, index === 0 ? 1 : 0])
+console.log("VALORES:", valores) // ← adiciona isso
+
+db.query(
+  `INSERT INTO imagem_produto (id_produto, caminho_imagem, imagem_principal) VALUES ?`,
+  [valores],
+  (err) => {
+    console.log("CALLBACK DO INSERT CHAMADO") // ← adiciona isso
+    if (err) {
+      console.error("ERRO AO SALVAR IMAGENS:", err.message)
+      console.error("VALORES TENTADOS:", valores)
+      return res.status(500).json({ error: "Erro ao salvar imagens." })
+    }
+    console.log("Imagens salvas com sucesso!")
+    return res.status(201).json({ message: "Produto cadastrado com sucesso!", id_produto: idProduto })
+  }
+)
           }
         )
       }
     )
   }
+})
+
+// ─── GET /produtos — listagem ─────────────────
+app.get("/produtos", (req, res) => {
+  const sql = `
+    SELECT 
+      p.id_produto,
+      p.nome AS titulo,
+      p.preco,
+      l.cidade,
+      l.estado,
+      ip.caminho_imagem
+    FROM produto p
+    JOIN loja_anunciante la ON p.id_loja = la.id_loja
+    JOIN localizacao l ON la.id_localizacao = l.id_localizacao
+    LEFT JOIN imagem_produto ip ON ip.id_produto = p.id_produto AND ip.imagem_principal = 1
+    WHERE p.status = 'ativo'
+    ORDER BY p.id_produto DESC
+  `
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("ERRO AO BUSCAR PRODUTOS:", err.message)
+      return res.status(500).json({ error: "Erro ao buscar produtos." })
+    }
+    res.json(results)
+  })
+})
+
+// ─── GET /produtos/:id — detalhe ─────────────
+app.get("/produtos/:id", (req, res) => {
+  const { id } = req.params
+
+  const sql = `
+    SELECT 
+      p.id_produto,
+      p.nome AS titulo,
+      p.descricao,
+      p.preco,
+      cat.nome AS categoria,
+      cond.nome AS condicao,
+      l.cidade,
+      l.estado,
+      u.nome AS nome_vendedor,
+      u.telefone AS telefone_vendedor
+    FROM produto p
+    JOIN loja_anunciante la ON p.id_loja = la.id_loja
+    JOIN localizacao l ON la.id_localizacao = l.id_localizacao
+    JOIN usuario u ON la.id_usuario = u.id_usuario
+    JOIN categoria cat ON p.id_categoria = cat.id_categoria
+    JOIN condicao_produto cond ON p.id_condicao = cond.id_condicao
+    WHERE p.id_produto = ?
+  `
+
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error("ERRO AO BUSCAR PRODUTO:", err.message)
+      return res.status(500).json({ error: "Erro ao buscar produto." })
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Produto não encontrado." })
+    }
+    res.json(results[0])
+  })
 })
 app.listen(3000, () => {
   console.log("Servidor rodando na porta 3000")
