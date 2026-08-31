@@ -93,7 +93,12 @@ export default function Header() {
                 </button>
               </div>
             )}
+            
           </div>
+
+          <Button variant="destaque" onClick={() => navigate("/cadastroProduto")}>
+  Anunciar
+</Button>
           <Button variant="destaque" onClick={() => navigate("/register")}>
             Começar agora
           </Button>
