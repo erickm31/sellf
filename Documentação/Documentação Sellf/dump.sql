@@ -23,7 +23,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '07593505-4688-11f1-92e0-0ccc47eb1185:1-104';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '07593505-4688-11f1-92e0-0ccc47eb1185:1-227';
 
 --
 -- Table structure for table `anuncio`
@@ -34,8 +34,8 @@ DROP TABLE IF EXISTS `anuncio`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `anuncio` (
   `id_anuncio` int NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(150) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
-  `descricao` text CHARACTER SET armscii8 COLLATE armscii8_bin,
+  `titulo` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descricao` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `id_produto` int DEFAULT NULL,
   `idstatus_anuncio` int NOT NULL,
   PRIMARY KEY (`id_anuncio`),
@@ -43,7 +43,7 @@ CREATE TABLE `anuncio` (
   KEY `fk_anuncio_status_anuncio1_idx` (`idstatus_anuncio`),
   CONSTRAINT `anuncio_ibfk_1` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`id_produto`),
   CONSTRAINT `fk_anuncio_status_anuncio1` FOREIGN KEY (`idstatus_anuncio`) REFERENCES `status_anuncio` (`idstatus_anuncio`)
-) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,6 +52,7 @@ CREATE TABLE `anuncio` (
 
 LOCK TABLES `anuncio` WRITE;
 /*!40000 ALTER TABLE `anuncio` DISABLE KEYS */;
+INSERT INTO `anuncio` VALUES (1,'Iphone13','topzera',1,1),(2,'Iphone14','muito bom',2,1),(3,'Cadeira','Cadeira ergonomica simples',3,1),(4,'mouse','mouse novo logitech',4,1),(5,'Cadeira','gamer',5,1),(6,'Celular Samsung','Celular s26 Ultra',6,1),(7,'Iphone 16 128GB','Apple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\nApple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\n3\r\nApple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\nAcesse a Loja Oficial de Apple\r\n\r\n\r\nNovo  |  +10 mil vendidos\r\nApple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\nLOJA OFICIAL APPLE\r\nVendido por um Revendedor Autorizado Apple.\r\nProduto novo em caixa fechada e com nota fiscal local.\r\nGarantia limitada da Apple por 1 ano.\r\nGarantia AppleCare e serviço de reparo local para produtos fora da garantia.\r\n4.9\r\nAvaliação 4.9 de 5. 43852 opiniões.\r\n(43852)\r\nAdicionar aos favoritos\r\nR$\r\n7.799\r\nR$\r\n4.496\r\n,\r\n80\r\n42% OFF\r\n\r\nou \r\nR$\r\n5.110\r\n em 10x \r\nR$\r\n511\r\n sem juros\r\n\r\n10% OFF Saldo no Mercado Pago\r\n\r\nVer meios de pagamento e promoções\r\nCor:Rosa\r\n\r\nBranco\r\nPreto\r\nRosa\r\nUltramarine\r\nVerde-acinzentado\r\nMemória interna:128 GB\r\n\r\n128 GB\r\n\r\n256 GB\r\n\r\nPoupe comprando com Plano de troca\r\n\r\nReceba até R$5.000 pelo celular usado adicionando o Plano de troca na sua compra.\r\n\r\n\r\nCotar meu celular\r\n\r\nComo funciona\r\nO que você precisa saber sobre este produto\r\nMemória RAM: 8 GB.\r\nO controle da câmera é seu.\r\nFotos que vão além e chegam mais perto.\r\nEstilos fotográficos.\r\nChip A18 superinteligente.\r\nMaior duração da bateria.\r\nRecurso essencial de segurança.\r\nEste iPhone é compatível com eSIM. Entre em contato com a sua operadora para saber como ativar.',7,1),(8,'Iphone 16 128GB','iphone',8,1),(9,'Iphone 16 128GB','iphone',9,1),(10,'Iphone 16 128GB','iphone',10,1),(11,'Iphone 16 128GB','iphone',11,1),(12,'Iphone 16 128GB','aaaa',12,1),(13,'Iphone 16 128GB','aaa',13,1),(14,'dadasdas','dsadada',14,1),(15,'Samsung s26','celular',15,1),(16,'Lanterna Ecopower 8135','Lanterna com por',16,1);
 /*!40000 ALTER TABLE `anuncio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,9 +65,9 @@ DROP TABLE IF EXISTS `categoria`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `categoria` (
   `id_categoria` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id_categoria`)
-) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -75,7 +76,60 @@ CREATE TABLE `categoria` (
 
 LOCK TABLES `categoria` WRITE;
 /*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
+INSERT INTO `categoria` VALUES (1,'Eletrônicos'),(2,'Veículos'),(3,'Imóveis'),(4,'Moda e Vestuário'),(5,'Casa e Jardim'),(6,'Esportes e Lazer'),(7,'Brinquedos e Jogos'),(8,'Livros e Papelaria'),(9,'Música e Instrumentos'),(10,'Ferramentas e Construção'),(11,'Saúde e Beleza'),(12,'Animais de Estimação'),(13,'Outros');
 /*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `condicao_produto`
+--
+
+DROP TABLE IF EXISTS `condicao_produto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `condicao_produto` (
+  `id_condicao` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_condicao`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `condicao_produto`
+--
+
+LOCK TABLES `condicao_produto` WRITE;
+/*!40000 ALTER TABLE `condicao_produto` DISABLE KEYS */;
+INSERT INTO `condicao_produto` VALUES (1,'Novo'),(2,'Semi Novo'),(3,'Bom Estado'),(4,'Regular');
+/*!40000 ALTER TABLE `condicao_produto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `imagem_produto`
+--
+
+DROP TABLE IF EXISTS `imagem_produto`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `imagem_produto` (
+  `id_imagem` int NOT NULL AUTO_INCREMENT,
+  `id_produto` int NOT NULL,
+  `caminho_imagem` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `imagem_principal` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id_imagem`),
+  KEY `fk_imagem_produto` (`id_produto`),
+  CONSTRAINT `fk_imagem_produto` FOREIGN KEY (`id_produto`) REFERENCES `produto` (`id_produto`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `imagem_produto`
+--
+
+LOCK TABLES `imagem_produto` WRITE;
+/*!40000 ALTER TABLE `imagem_produto` DISABLE KEYS */;
+INSERT INTO `imagem_produto` VALUES (1,6,'1787181038934-219159510.jpg',1),(2,7,'1787181512023-379553807.webp',1),(3,8,'1787181769039-944951154.webp',1),(4,9,'1787182074944-148087819.webp',1),(5,10,'1787182094826-902110859.webp',1),(6,11,'1787182407428-965457101.webp',1),(7,12,'1787182645906-178535009.webp',1),(8,13,'1787183261627-985740789.webp',1),(9,14,'1787221977564-240242373.jpg',1),(10,15,'1787222291778-156224237.jpg',1),(11,16,'1787224443284-885184366.jpeg',1);
+/*!40000 ALTER TABLE `imagem_produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -90,8 +144,9 @@ CREATE TABLE `localizacao` (
   `cidade` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `estado` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `cep` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bairro` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id_localizacao`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -100,7 +155,7 @@ CREATE TABLE `localizacao` (
 
 LOCK TABLES `localizacao` WRITE;
 /*!40000 ALTER TABLE `localizacao` DISABLE KEYS */;
-INSERT INTO `localizacao` VALUES (25,'Campo Mourão','Paraná',''),(29,'Campo Mourão','Paraná',''),(30,'Campo Mourão','Paraná','');
+INSERT INTO `localizacao` VALUES (25,'Campo Mourão','Paraná','',NULL),(29,'Campo Mourão','Paraná','',NULL),(30,'Campo Mourão','Paraná','',NULL),(31,'Pato Branco','Paraná','',NULL),(32,'Campo Mourão','Paraná','',NULL),(33,'Campo Mourão','Paraná','',NULL),(34,'Campo Mourão','Paraná','',NULL),(35,'Campo Mourão','PR','87303307',''),(36,'Campo Mourão','PR','87303307','Jardim São Sebastião'),(37,'Campo Mourão','PR','87303307','Jardim São Sebastião'),(38,'Campo Mourão','PR','87303307','Jardim São Sebastião'),(39,'Campo Mourão','PR','87303307','Jardim São Sebastião'),(40,'Campo Mourão','PR','',NULL),(41,'Araruna','PR','',NULL),(42,'Araruna','PR','',NULL),(43,'Campo Mourão','PR','',NULL),(44,'Campo Mourão','PR','',NULL),(45,'Campo Mourão','PR','',NULL),(46,'Campo Mourão','PR','',NULL),(47,'Campo Mourão','PR','',NULL),(48,'Campo Mourão','PR','',NULL),(49,'Pato Branco','PR','',NULL),(50,'Pato Branco','PR','',NULL);
 /*!40000 ALTER TABLE `localizacao` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,7 +168,7 @@ DROP TABLE IF EXISTS `loja_anunciante`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `loja_anunciante` (
   `id_loja` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
+  `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_usuario` int DEFAULT NULL,
   `id_localizacao` int DEFAULT NULL,
   `idstatus_loja` int NOT NULL,
@@ -124,7 +179,7 @@ CREATE TABLE `loja_anunciante` (
   CONSTRAINT `fk_loja_anunciante_status_loja1` FOREIGN KEY (`idstatus_loja`) REFERENCES `status_loja` (`idstatus_loja`),
   CONSTRAINT `loja_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `loja_ibfk_2` FOREIGN KEY (`id_localizacao`) REFERENCES `localizacao` (`id_localizacao`)
-) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,6 +188,7 @@ CREATE TABLE `loja_anunciante` (
 
 LOCK TABLES `loja_anunciante` WRITE;
 /*!40000 ALTER TABLE `loja_anunciante` DISABLE KEYS */;
+INSERT INTO `loja_anunciante` VALUES (1,'Loja do joão',32,39,1),(2,'Loja de JOAO PEDRO BUHLER',38,45,1),(3,'Loja de Joao',41,48,1),(4,'Loja de Joao Buhler',43,50,1),(5,'Loja de João',23,25,1);
 /*!40000 ALTER TABLE `loja_anunciante` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,18 +201,21 @@ DROP TABLE IF EXISTS `produto`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `produto` (
   `id_produto` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(100) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
-  `descricao` text CHARACTER SET armscii8 COLLATE armscii8_bin,
-  `preco` varchar(20) CHARACTER SET armscii8 COLLATE armscii8_bin NOT NULL,
-  `status` varchar(20) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT 'ativo',
+  `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descricao` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `preco` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'ativo',
   `id_loja` int DEFAULT NULL,
   `id_categoria` int DEFAULT NULL,
+  `id_condicao` int DEFAULT NULL,
   PRIMARY KEY (`id_produto`),
   KEY `id_categoria` (`id_categoria`),
   KEY `id_loja` (`id_loja`),
+  KEY `fk_produto_condicao` (`id_condicao`),
+  CONSTRAINT `fk_produto_condicao` FOREIGN KEY (`id_condicao`) REFERENCES `condicao_produto` (`id_condicao`),
   CONSTRAINT `produto_ibfk_1` FOREIGN KEY (`id_loja`) REFERENCES `loja_anunciante` (`id_loja`),
   CONSTRAINT `produto_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`)
-) ENGINE=InnoDB DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,6 +224,7 @@ CREATE TABLE `produto` (
 
 LOCK TABLES `produto` WRITE;
 /*!40000 ALTER TABLE `produto` DISABLE KEYS */;
+INSERT INTO `produto` VALUES (1,'Iphone13','topzera','3000','ativo',1,1,1),(2,'Iphone14','muito bom','4000','ativo',1,1,3),(3,'Cadeira','Cadeira ergonomica simples','500','ativo',1,3,1),(4,'mouse','mouse novo logitech','100','ativo',1,1,1),(5,'Cadeira','gamer','200','ativo',2,11,1),(6,'Celular Samsung','Celular s26 Ultra','4000','ativo',3,1,1),(7,'Iphone 16 128GB','Apple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\nApple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\n3\r\nApple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\nAcesse a Loja Oficial de Apple\r\n\r\n\r\nNovo  |  +10 mil vendidos\r\nApple iPhone 16 (128 GB) - Rosa - Distribuidor Autorizado\r\nLOJA OFICIAL APPLE\r\nVendido por um Revendedor Autorizado Apple.\r\nProduto novo em caixa fechada e com nota fiscal local.\r\nGarantia limitada da Apple por 1 ano.\r\nGarantia AppleCare e serviço de reparo local para produtos fora da garantia.\r\n4.9\r\nAvaliação 4.9 de 5. 43852 opiniões.\r\n(43852)\r\nAdicionar aos favoritos\r\nR$\r\n7.799\r\nR$\r\n4.496\r\n,\r\n80\r\n42% OFF\r\n\r\nou \r\nR$\r\n5.110\r\n em 10x \r\nR$\r\n511\r\n sem juros\r\n\r\n10% OFF Saldo no Mercado Pago\r\n\r\nVer meios de pagamento e promoções\r\nCor:Rosa\r\n\r\nBranco\r\nPreto\r\nRosa\r\nUltramarine\r\nVerde-acinzentado\r\nMemória interna:128 GB\r\n\r\n128 GB\r\n\r\n256 GB\r\n\r\nPoupe comprando com Plano de troca\r\n\r\nReceba até R$5.000 pelo celular usado adicionando o Plano de troca na sua compra.\r\n\r\n\r\nCotar meu celular\r\n\r\nComo funciona\r\nO que você precisa saber sobre este produto\r\nMemória RAM: 8 GB.\r\nO controle da câmera é seu.\r\nFotos que vão além e chegam mais perto.\r\nEstilos fotográficos.\r\nChip A18 superinteligente.\r\nMaior duração da bateria.\r\nRecurso essencial de segurança.\r\nEste iPhone é compatível com eSIM. Entre em contato com a sua operadora para saber como ativar.','4500','ativo',3,1,1),(8,'Iphone 16 128GB','iphone','4000','ativo',3,1,1),(9,'Iphone 16 128GB','iphone','4000','ativo',3,1,1),(10,'Iphone 16 128GB','iphone','4000','ativo',3,1,1),(11,'Iphone 16 128GB','iphone','4000','ativo',3,1,1),(12,'Iphone 16 128GB','aaaa','22222','ativo',3,12,2),(13,'Iphone 16 128GB','aaa','222222','ativo',4,11,2),(14,'dadasdas','dsadada','32393012','ativo',5,12,3),(15,'Samsung s26','celular','50000','ativo',5,1,1),(16,'Lanterna Ecopower 8135','Lanterna com por','100','ativo',5,1,2);
 /*!40000 ALTER TABLE `produto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,6 +248,7 @@ CREATE TABLE `status_anuncio` (
 
 LOCK TABLES `status_anuncio` WRITE;
 /*!40000 ALTER TABLE `status_anuncio` DISABLE KEYS */;
+INSERT INTO `status_anuncio` VALUES (1,'Ativo'),(2,'Pausado'),(3,'Vendido');
 /*!40000 ALTER TABLE `status_anuncio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -211,6 +272,7 @@ CREATE TABLE `status_loja` (
 
 LOCK TABLES `status_loja` WRITE;
 /*!40000 ALTER TABLE `status_loja` DISABLE KEYS */;
+INSERT INTO `status_loja` VALUES (1,'Ativa'),(2,'Inativa');
 /*!40000 ALTER TABLE `status_loja` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -273,12 +335,14 @@ CREATE TABLE `usuario` (
   `id_usuario` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `cpf` varchar(14) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `telefone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `senha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `data_cadastro` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `idtipo_usuario` int NOT NULL,
   `idstatus_usuario` int NOT NULL,
   `id_localizacao` int NOT NULL,
+  `senha_resetada` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `email` (`email`),
   KEY `fk_usuario_tipo_usuario1_idx` (`idtipo_usuario`),
@@ -287,7 +351,7 @@ CREATE TABLE `usuario` (
   CONSTRAINT `fk_usuario_localizacao1` FOREIGN KEY (`id_localizacao`) REFERENCES `localizacao` (`id_localizacao`),
   CONSTRAINT `fk_usuario_status_usuario1` FOREIGN KEY (`idstatus_usuario`) REFERENCES `status_usuario` (`idstatus_usuario`),
   CONSTRAINT `fk_usuario_tipo_usuario1` FOREIGN KEY (`idtipo_usuario`) REFERENCES `tipo_usuario` (`idtipo_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,9 +360,13 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (23,'João','097.518.929-88','joaopedrobuhler26@gmail.com','$2b$10$HyL04R84QCuhI4MKPiEVVO02rT5y2oLnIFF7vGfgwHZ/WEJsDfT9.','2026-05-04 00:28:04',3,1,25),(27,'João','097.518.929-88','xynhg01@gmail.com','$2b$10$H6AMo5idAAEru8VIEdDlF.Zjm9X0mIydCbIhyFFUDweNdM7.Nu0j6','2026-05-04 17:33:12',1,1,29),(28,'João Bühler','097.518.929-88','joao123@gmail.com','$2b$10$OXTy.H/thEB5FK6eyPxlLO/0Me5D//ZMafxjfvEejSFIbXhpMKOxC','2026-05-04 17:47:30',2,1,30);
+INSERT INTO `usuario` VALUES (23,'João','097.518.929-88',NULL,'joaopedrobuhler26@gmail.com','$2b$10$HyL04R84QCuhI4MKPiEVVO02rT5y2oLnIFF7vGfgwHZ/WEJsDfT9.','2026-05-04 00:28:04',3,1,25,0),(30,'Joao bozz','417.899.130-20',NULL,'joaobozz@gmail.com','$2b$10$2jlkudhSdmp8ed6fP/AybevD5e0pek7fNr0SKpqcPM80q6bwDjYhW','2026-05-13 17:06:57',1,1,32,0),(32,'João Pedro','097.518.929-88',NULL,'joaopedro@gmail.com','$2b$10$ZpeRDa0hFSsdxzLCui1ApeUn3tNLh7j8oyvJqjvrkfsTeNoGGK9ue','2026-05-14 11:30:51',2,2,34,0),(33,'João Bühler','16168483918',NULL,'ericklemes@gmail.com','$2b$10$ZRZwttdwijgvJwpGA6GLs.8hlKxmjyOFN9QXntISLm8Jv/RM0x66y','2026-07-09 11:39:32',2,1,40,0),(34,'João Bühler','080.554.990-04',NULL,'antonio@gmail.com','$2b$10$VwGLP..cHYAL/uriXYqL5es9hFcwvfMG5TApK8zNPmWuzyWNXjh.q','2026-07-09 11:42:30',1,1,41,0),(35,'Hiago','084.787.400-15',NULL,'hiago@gmail.com','$2b$10$pq0ZYBXFLlrp6Q/9Rd2mIeGuvdJ48M3rKHYhhCWoHp7Skst82/emC','2026-07-09 11:43:08',2,2,42,0),(37,'Vitor','721.394.910-17',NULL,'vitor@gmail.com','$2b$10$I8pYc.hLMXhRGTz4VRCxwOqcFTgi6ck9OhaGfTpuphor3aPaOvw/q','2026-07-09 11:45:00',1,1,44,0),(38,'JOAO PEDRO BUHLER','09751892988',NULL,'xynhg01@gmail.com','$2b$10$H10JrM1AsPT50fREZ1VIGuTmm/FohFFOsBl6xFMgC5KCCoSLRyBgW','2026-08-19 18:09:23',2,1,45,0),(41,'Joao','09751892988','46991262603','pedro@gmail.com','$2b$10$rfdRP5OKvgArEKKPmLHX4eIZcmOlzeT/eJkenNlUKK/.RlsUyAO5m','2026-08-19 22:41:14',2,1,48,0),(43,'Joao Buhler','09751892988','46991262607','joao@hotmail.com','$2b$10$5bBNnuLlTtkXlvvZQNj9muqhFa5MygEc1JO58VIFTm6Be2ApVhlmW','2026-08-19 23:44:25',1,1,50,0);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'bancodedadossellf'
+--
 
 --
 -- Dumping routines for database 'bancodedadossellf'
@@ -314,4 +382,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-04 15:28:45
+-- Dump completed on 2026-09-01  7:54:39
