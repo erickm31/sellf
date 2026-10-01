@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styles from "./styles.module.css";
-import Button from "../../components/ui/Button";
+import Button from "../../components/ui/button";
 import Headerlanding from "../../components/layout/Headerlanding";
 import Footer from "../../components/layout/Footer";
 import sellfazul from "../../assets/sellf.png";

@@ -3,10 +3,10 @@ import axios from "axios";
 import styles from "./styles.module.css";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-import LocalContextBar from "../../components/ui/LocalContextBar";
-import ProductCard from "../../components/ui/ProductCard";
-import StoreCard from "../../components/ui/StoreCard";
-import Button from "../../components/ui/Button";
+import LocalContextBar from "../../components/ui/localContextBar";
+import ProductCard from "../../components/ui/productCard";
+import StoreCard from "../../components/ui/storeCard";
+import Button from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 const FEATURED = [

@@ -4,7 +4,7 @@ import axios from "axios";
 import styles from "./styles.module.css";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-import Button from "../../components/ui/Button";
+import Button from "../../components/ui/button";
 
 /*
   CONTRATO ESPERADO DA API — GET /produtos/:id

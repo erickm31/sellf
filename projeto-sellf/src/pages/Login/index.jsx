@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import styles from "./styles.module.css";
-import Button from "../../components/ui/Button";
+import Button from "../../components/ui/button";
 
 export default function Login() {
   const navigate = useNavigate();
