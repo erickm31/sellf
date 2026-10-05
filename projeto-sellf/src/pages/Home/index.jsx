@@ -71,9 +71,8 @@ export default function Home() {
                 price={p.preco}
                 location={`${p.cidade} - ${p.estado}`}
                 image={
-                  p.caminho_imagem
-                    ? `http://localhost:3000/uploads/${p.caminho_imagem}`
-                    : "https://placehold.co/300x200"
+                    p.caminho_imagem || 
+                     "https://placehold.co/300x200"
                 }
               />
             ))}
