@@ -517,6 +517,7 @@ app.post("/produtos", verificarToken, upload.array("imagens", 8), async (req, re
         descricao,
         preco: Number(preco),
         status: "ativo",
+        destaque: false,
         id_loja: loja.id_loja,
         id_categoria: Number(id_categoria),
         id_condicao: Number(id_condicao)
@@ -610,35 +611,66 @@ app.get("/produtos", async (req, res) => {
     const { data, error } = await supabase
       .from("produto")
       .select(`
-        id_produto, nome, preco,
-        loja_anunciante ( id_loja, localizacao ( cidade, estado ) ),
-        imagem_produto ( caminho_imagem, imagem_principal )
+        id_produto,
+        nome,
+        preco,
+        destaque,
+        loja_anunciante (
+          id_loja,
+          localizacao (
+            cidade,
+            estado
+          )
+        ),
+        imagem_produto (
+          caminho_imagem,
+          imagem_principal
+        )
       `)
       .eq("status", "ativo")
       .order("id_produto", { ascending: false })
 
-    if (error) return res.status(500).json({ error: "Erro ao buscar produtos." })
+    if (error) {
+      console.error("ERRO AO BUSCAR PRODUTOS:", error)
 
-    const produtos = (data || []).map(produto => {
+      return res.status(500).json({
+        error: "Erro ao buscar produtos."
+      })
+    }
+
+    const produtos = (data || []).map((produto) => {
       const localizacao = produto.loja_anunciante?.localizacao
-      const imagem = produto.imagem_produto?.find(img => img.imagem_principal === true)
+
+      const imagemPrincipal = produto.imagem_produto?.find(
+        (img) => img.imagem_principal === true
+      )
+
       return {
         id_produto: produto.id_produto,
         titulo: produto.nome,
         preco: produto.preco,
+
+        // NOVO
+        destaque: produto.destaque === true,
+
         cidade: localizacao?.cidade || null,
         estado: localizacao?.estado || null,
-        caminho_imagem: imagem?.caminho_imagem || null
+
+        caminho_imagem: imagemPrincipal?.caminho_imagem || null
       }
     })
 
     return res.json(produtos)
 
   } catch (error) {
-    console.error(error)
-    return res.status(500).json({ error: "Erro ao buscar produtos." })
+    console.error("ERRO AO BUSCAR PRODUTOS:", error)
+
+    return res.status(500).json({
+      error: "Erro ao buscar produtos."
+    })
   }
 })
+
 
 // ============================================================
 // GET PRODUTO POR ID

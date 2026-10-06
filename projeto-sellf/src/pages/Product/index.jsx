@@ -6,80 +6,41 @@ import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import Button from "../../components/ui/button";
 
-/*
-  CONTRATO ESPERADO DA API — GET /produtos/:id
-  {
-    id_produto: number,
-    titulo: string,
-    descricao: string,
-    preco: number | string,
-    categoria: string,
-    condicao: string,
-    cidade: string,
-    estado: string,
-    nome_vendedor: string,
-    telefone_vendedor: string   // só números, ex: "44999998888"
-  }
-*/
-
-// Mock usado enquanto o back não está plugado
-const MOCK_PRODUCT = {
-  id_produto: 1,
-  titulo: "iPhone 13 128GB",
-  descricao: "iPhone 13 em ótimo estado, sem riscos, bateria com 91% de saúde. Acompanha carregador e caixa original.",
-  preco: "3200,00",
-  categoria: "Eletrônicos",
-  condicao: "Seminovo — usado poucas vezes",
-  cidade: "Campo Mourão",
-  estado: "PR",
-  nome_vendedor: "João Silva",
-  telefone_vendedor: "44999998888",
-};
-
 export default function Product() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [produto, setProduto] = useState(null);
   const [carregando, setCarregando] = useState(true);
+  const [imagemAtiva, setImagemAtiva] = useState(0); // ← índice da foto selecionada
 
   useEffect(() => {
     let ativo = true;
-
     async function carregarProduto() {
       try {
         const resposta = await axios.get(`http://localhost:3000/produtos/${id}`);
         if (ativo) setProduto(resposta.data);
       } catch (err) {
-        console.error("Erro ao buscar produto, usando mock:", err.message);
-        if (ativo) setProduto(MOCK_PRODUCT);
+        console.error("Erro ao buscar produto:", err.message);
       } finally {
         if (ativo) setCarregando(false);
       }
     }
-
     carregarProduto();
     return () => { ativo = false; };
   }, [id]);
 
-  if (carregando) {
-    return (
-      <div className={styles.page}>
-        <Header />
-        <p className={styles.loading}>Carregando produto...</p>
-        <Footer />
-      </div>
-    );
-  }
+  if (carregando) return (
+    <div className={styles.page}><Header /><p className={styles.loading}>Carregando produto...</p><Footer /></div>
+  );
 
-  if (!produto) {
-    return (
-      <div className={styles.page}>
-        <Header />
-        <p className={styles.loading}>Produto não encontrado.</p>
-        <Footer />
-      </div>
-    );
-  }
+  if (!produto) return (
+    <div className={styles.page}><Header /><p className={styles.loading}>Produto não encontrado.</p><Footer /></div>
+  );
+
+  const imagens = produto.imagens || [];
+  const imagemExibida = imagens.length > 0
+    ? imagens[imagemAtiva]?.caminho_imagem
+    : null;
 
   const linkWhatsapp = `https://wa.me/55${produto.telefone_vendedor}?text=${encodeURIComponent(
     `Olá! Vi seu anúncio "${produto.titulo}" no Sellf e tenho interesse.`
@@ -98,13 +59,33 @@ export default function Product() {
         <div className={styles.layout}>
           {/* ── Coluna esquerda: imagem + detalhes ── */}
           <div className={styles.colMain}>
+
+            {/* Imagem principal */}
             <div className={styles.imageBox}>
-              <img
-                src="https://placehold.co/600x400?text=Sem+imagem"
-                alt={produto.titulo}
-                className={styles.image}
-              />
+              {imagemExibida ? (
+                <img src={imagemExibida} alt={produto.titulo} className={styles.image} />
+              ) : (
+                <div className={styles.semImagem}>
+                  <span className="material-symbols-outlined">image_not_supported</span>
+                  <p>Sem imagem</p>
+                </div>
+              )}
             </div>
+
+            {/* Miniaturas — só aparece se tiver mais de 1 foto */}
+            {imagens.length > 1 && (
+              <div className={styles.thumbnailRow}>
+                {imagens.map((img, i) => (
+                  <button
+                    key={i}
+                    className={`${styles.thumbnail} ${i === imagemAtiva ? styles.thumbnailAtiva : ""}`}
+                    onClick={() => setImagemAtiva(i)}
+                  >
+                    <img src={img.caminho_imagem} alt={`foto ${i + 1}`} />
+                  </button>
+                ))}
+              </div>
+            )}
 
             <section className={styles.card}>
               <div className={styles.cardHead}>
@@ -113,7 +94,6 @@ export default function Product() {
               </div>
               <div className={styles.cardBody}>
                 <p className={styles.descricao}>{produto.descricao}</p>
-
                 <div className={styles.tagsRow}>
                   <span className={styles.tag}>{produto.categoria}</span>
                   <span className={styles.tag}>{produto.condicao}</span>
@@ -122,13 +102,12 @@ export default function Product() {
             </section>
           </div>
 
-          {/* ── Coluna direita: preço, local, contato ── */}
+          {/* ── Coluna direita ── */}
           <div className={styles.colSide}>
             <section className={styles.card}>
               <div className={styles.cardBody}>
                 <h1 className={styles.titulo}>{produto.titulo}</h1>
                 <p className={styles.preco}>R$ {produto.preco}</p>
-
                 <div className={styles.metaItem}>
                   <span className="material-symbols-outlined">location_on</span>
                   {produto.cidade} - {produto.estado}
